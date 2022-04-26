@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Bible Extension</title>
+  </head>
+  <body>
+    <div
+      id="search-box"
+      class="bg-gray-100 border rounded-md shadow-md p-4 m-4 flex flex-col space-y-2"
+    >
+      <input
+        type="text"
+        class="w-full border p-2"
+        placeholder="찾으실 성경 구절을 입력하세요 (ex 마:1-10)"
+      />
+
+      <div class="flex justify-end">
+        <button>전체 복사</button>
+      </div>
+      <div id="result" class="w-full flex flex-col" readonly></div>
+    </div>
+  </body>
+  <script src="prefix.js"></script>
+  <script src="script.js"></script>
+</html>

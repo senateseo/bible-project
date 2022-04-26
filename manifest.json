@@ -1,0 +1,11 @@
+{
+  "name": "Sangwon's sample ext",
+  "version": "1.0.0",
+  "description": "Sangwon's sample extension",
+  "manifest_version": 3,
+  "author": "Sangwon Seo",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Hello Sangwon"
+  }
+}
