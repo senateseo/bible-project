@@ -1,7 +1,7 @@
 {
-  "name": "Sangwon's sample ext",
+  "name": "TEST",
   "version": "1.0.0",
-  "description": "Sangwon's sample extension",
+  "description": "Bible search chrome extension supports only KOR version.",
   "manifest_version": 3,
   "author": "Sangwon Seo",
   "action": {
