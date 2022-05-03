@@ -2,14 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script src="https://cdn.tailwindcss.com"></script>
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
     />
+    <link href="output.css" rel="stylesheet" />
     <title>Bible Extension</title>
   </head>
-  <body>
+  <body class="w-80 h-80">
     <div
       id="search-box"
       class="transition-all transform bg-gray-100 border rounded-md shadow-md m-4 flex flex-col space-y-2"
@@ -26,38 +27,47 @@
           class="fas fa-times mx-2 text-gray-500 cursor-pointer"
         ></i>
       </div>
-
-      <div class="p-2">
-        <div class="flex justify-between">
-          <div id="result-meta-container" class="flex"></div>
-          <button
-            id="btn-copy"
-            type="button"
-            class="transition ease-in-out hover:scale-110 inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    </div>
+    <div class="px-4 py-2">
+      <div class="flex justify-between">
+        <div id="result-meta-container" class="flex"></div>
+        <button
+          id="btn-copy"
+          type="button"
+          class="transition ease-in-out hover:scale-110 text-xs inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 opacity-0"
+        >
+          <!-- Heroicon name: solid/copyclipboard -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 mr-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
           >
-            <!-- Heroicon name: solid/copyclipboard -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 mr-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-              />
-            </svg>
-            전체 복사
-          </button>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+            />
+          </svg>
+          전체 복사
+        </button>
+      </div>
+      <div
+        id="result"
+        class="transition ease-in-out w-full flex flex-col max-h-60 overflow-y-auto"
+        readonly
+      >
+        <div class="flex flex-col text-gray-500">
+          <p>본 성경은 <b>한글 개역개정</b> 성경입니다.</p>
+          <p>아래와 같이 검색하실 수 있습니다:</p>
+          <br />
+          <p>(예시)</p>
+          <p>- 마태복음 1:10</p>
+          <p>- 마 1:10-20</p>
+          <p>- 마 1:10~20</p>
         </div>
-        <div
-          id="result"
-          class="w-full flex flex-col max-h-60 overflow-y-scroll"
-          readonly
-        ></div>
       </div>
     </div>
   </body>

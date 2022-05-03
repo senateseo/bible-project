@@ -1,11 +1,20 @@
 {
   "name": "Bible-Search(KOR)",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bible search chrome extension supports only KOR version.",
   "manifest_version": 3,
   "author": "Sangwon Seo",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["activeTab", "scripting"],
   "action": {
     "default_popup": "index.html",
     "default_title": "Hello Sangwon"
+  },
+  "icons": {
+    "16": "icons/bible-16.png",
+    "32": "icons/bible-32.png",
+    "96": "icons/bible-96.png"
   }
 }

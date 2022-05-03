@@ -2,75 +2,101 @@ const searchBox = document.querySelector("#search-box");
 const searchInput = document.querySelector("input");
 const resultBox = document.querySelector("#result");
 const resultMetaContainer = document.querySelector("#result-meta-container");
-
 const copyBtn = document.querySelector("#btn-copy");
 const clearBtn = document.querySelector("#btn-clear");
 
+const noResultInnerHTML = `
+<div class="w-full flex justify-center items-center my-2">
+<span class="text-gray-500 text-sm">찾으시는 결과가 없습니다</span>
+</div>
+`;
+let isSearching = false;
+copyBtn.style.opacity = 0;
 const onChangeSearchInput = async (e) => {
-  const { book, chapter, from, to } = parseText(e.target.value);
+  try {
+    isSearching = true;
 
-  let res = await fetch("http://localhost:3000/bible", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-    body: JSON.stringify({
-      book: book + 1,
-      chapter: parseInt(chapter),
-      from: parseInt(from),
-      to: parseInt(to),
-    }),
-  });
+    if (isSearching) {
+      resultBox.innerHTML = `
+      <div class="animate-pulse flex flex-col space-y-4">
+      <div class="h-2 bg-gray-100 rounded"></div>
+      <div class="h-2 bg-gray-100 rounded"></div>
+      <div class="h-2 bg-gray-100 rounded"></div>
+      <div class="h-2 bg-gray-100 rounded"></div>
+      <div class="h-2 bg-gray-100 rounded"></div>
+      <div class="h-2 bg-gray-100 rounded"></div>
+      <div class="h-2 bg-gray-100 rounded"></div>
+      <div class="h-2 bg-gray-100 rounded"></div>
+      </div>
+      `;
+    }
 
-  const result = await res.json();
-
-  let innerHTML = "";
-
-  if (searchInput.value === "") {
-    innerHTML = "";
-    resultBox.innerHTML = innerHTML;
-    return;
-  }
-
-  if (!result.bible.length) {
-    innerHTML = `
-    <div class="w-full flex justify-center items-center my-2">
-      <span class="text-gray-500 text-lg">찾으시는 결과가 없습니다</span>
-    </div>
-    `;
-  } else {
-    turnToNotCopied();
-
-    const totalLength = result.bible.length;
-    const info = result.bible[0];
-
-    // Render Result
-    result.bible.forEach((row, idx) => {
-      innerHTML += `
-        <div id="phrase" class="flex my-2 text-gray-600">
-          <span class="mr-2" >${row.paragraph}</span>
-          <div>
-            ${row.sentence}
-          </div>
-        </div>
-        `;
+    const { book, chapter, from, to } = parseText(e.target.value);
+    let res = await fetch("http://localhost:3000/bible", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify({
+        book: book + 1,
+        chapter: parseInt(chapter),
+        from: parseInt(from),
+        to: parseInt(to),
+      }),
     });
 
-    // Render Result meta
+    const result = await res.json();
+    isSearching = false;
+    let innerHTML = "";
 
-    resultMetaContainer.innerHTML = `
-    <span class="text-sm text-gray-700">성경말씀 :</span>
-    <div id="result-meta" class="text-sm text-black font-bold mx-2">
-      ${info.long_label} ${info.chapter}장 ${
-      totalLength == 1
-        ? `${info.paragraph}절`
-        : `${info.paragraph}-${info.paragraph + totalLength - 1} 절`
+    if (searchInput.value === "") {
+      innerHTML = "";
+      resultBox.innerHTML = innerHTML;
+      return;
     }
-    </div>
-    `;
-  }
 
-  resultBox.innerHTML = innerHTML;
+    if (!result.bible.length) {
+      innerHTML = noResultInnerHTML;
+    } else {
+      turnToNotCopied();
+
+      const totalLength = result.bible.length;
+      const info = result.bible[0];
+
+      // Render Result
+      result.bible.forEach((row, idx) => {
+        innerHTML += `
+          <div id="phrase" class="flex my-2 text-gray-600">
+            <span class="mr-2" >${row.paragraph}</span>
+            <div>
+              ${row.sentence}
+            </div>
+          </div>
+          `;
+      });
+
+      // Render Result meta
+
+      resultMetaContainer.innerHTML = `
+      <span class="text-sm text-gray-700">성경말씀 :</span>
+      <div id="result-meta" class="text-sm text-black font-bold mx-2">
+        ${info.long_label} ${info.chapter}장 ${
+        totalLength == 1
+          ? `${info.paragraph}절`
+          : `${info.paragraph}-${info.paragraph + totalLength - 1} 절`
+      }
+      </div>
+      `;
+      // Render Copy button
+      copyBtn.style.opacity = 100;
+    }
+
+    resultBox.innerHTML = innerHTML;
+    resultBox.style.opacity = 100;
+  } catch (e) {
+    isSearching = false;
+    resultBox.innerHTML = noResultInnerHTML;
+  }
 };
 
 const isMacintosh = () => {
@@ -218,7 +244,7 @@ const turnToNotCopied = () => {
     d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
   />
 </svg>
-전체복사
+복사
   `;
 
   copyBtn.addEventListener("click", onPressCopyWholeText);
@@ -259,7 +285,7 @@ const onKeydown = (e) => {
   }
 };
 
-searchInput.addEventListener("keyup", debounce(onChangeSearchInput, 500));
+searchInput.addEventListener("keyup", debounce(onChangeSearchInput, 300));
 clearBtn.addEventListener("click", onPressClearSearchInput);
 copyBtn.addEventListener("click", onPressCopyWholeText);
 
