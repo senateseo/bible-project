@@ -31,8 +31,12 @@ const onChangeSearchInput = async (e) => {
       `;
     }
 
+    const API_URL = {
+      local: "http://localhost:3000",
+      prod: "http://15.165.160.72:3000",
+    };
     const { book, chapter, from, to } = parseText(e.target.value);
-    let res = await fetch("http://localhost:3000/bible", {
+    let res = await fetch(`${API_URL.prod}/bible`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=utf-8",

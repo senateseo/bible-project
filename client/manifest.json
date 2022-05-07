@@ -1,20 +1,18 @@
 {
-  "name": "Bible-Search(KOR)",
-  "version": "1.0.1",
-  "description": "Bible search chrome extension supports only KOR version.",
+  "name": "Bible Search(KOR)",
+  "version": "0.0.1",
+  "description": "Bible Search를 통해 어디서나 성경을 쉽게 검색하세요",
   "manifest_version": 3,
   "author": "Sangwon Seo",
-  "background": {
-    "service_worker": "background.js"
-  },
-  "permissions": ["activeTab", "scripting"],
+  "permissions": [],
   "action": {
     "default_popup": "index.html",
-    "default_title": "Hello Sangwon"
+    "default_title": "Bible Search"
   },
   "icons": {
     "16": "icons/bible-16.png",
     "32": "icons/bible-32.png",
-    "96": "icons/bible-96.png"
+    "96": "icons/bible-96.png",
+    "128": "icons/bible-128.png"
   }
 }
