@@ -16,6 +16,15 @@ const sequelize = new Sequelize(
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.Bible = require("./bible")(sequelize, Sequelize);
+const Bible = require("./bible")(sequelize, Sequelize);
+const BibleKJV = require("./biblekjv")(sequelize, Sequelize);
+const Key = require("./key")(sequelize, Sequelize);
+db.Bible = Bible;
+db.BibleKJV = BibleKJV;
+db.Key = Key;
+
+BibleKJV.belongsTo(Key, {
+  foreignKey: "book",
+});
 
 module.exports = db;

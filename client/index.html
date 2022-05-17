@@ -9,17 +9,62 @@
     />
     <link href="output.css" rel="stylesheet" />
     <title>Bible Extension</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/i18next/17.0.18/i18next.min.js"
+      type="text/javascript"
+    ></script>
   </head>
-  <body class="w-80 h-80">
+  <body class="w-80 h-80 p-4">
+    <div class="relative inline-block text-left m-4">
+      <div>
+        <button
+          type="button"
+          class="inline-flex justify-center w-full border-b-2 border-gray-300 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+          id="menu-button"
+          aria-expanded="true"
+          aria-haspopup="true"
+        ></button>
+      </div>
+
+      <div
+        id="dropdown-version"
+        class="transition ease-out duration-100 transform opacity-0 scale-95 origin-top-left absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+        role="menu"
+        aria-orientation="vertical"
+        aria-labelledby="menu-button"
+        tabindex="-1"
+      >
+        <div id="dropdown-container" class="py-1" role="none">
+          <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+          <a
+            href="#"
+            class="text-gray-700 block px-4 py-2 text-sm"
+            role="menuitem"
+            tabindex="-1"
+            id="menu-item-0"
+            >Account settings</a
+          >
+          <a
+            href="#"
+            class="text-gray-700 block px-4 py-2 text-sm"
+            role="menuitem"
+            tabindex="-1"
+            id="menu-item-1"
+            >Support</a
+          >
+        </div>
+      </div>
+    </div>
+
     <div
       id="search-box"
-      class="transition-all transform bg-gray-100 border rounded-md shadow-md m-4 flex flex-col space-y-2"
+      class="transition-all transform bg-gray-100 border rounded-md shadow-md flex flex-col space-y-2"
     >
       <div class="flex items-center bg-white rounded-md">
         <input
+          id="input__search"
           type="text"
           class="w-full p-2 rounded-md bg-white focus:outline-none"
-          placeholder="찾으실 성경 구절을 입력하세요 (ex 마 1:1-10)"
         />
 
         <i
@@ -59,9 +104,9 @@
         class="transition ease-in-out w-full flex flex-col max-h-60 overflow-y-auto"
         readonly
       >
-        <div class="flex flex-col text-gray-500">
+        <div id="init__text" class="flex flex-col text-gray-500">
           <p>본 성경은 <b>한글 개역개정</b> 성경입니다.</p>
-          <p>아래와 같이 검색하실 수 있습니다:</p>
+
           <br />
           <p>(예시)</p>
           <p>- 마태복음 1:10</p>
@@ -73,5 +118,6 @@
   </body>
   <script src="debounce.js"></script>
   <script src="prefix.js"></script>
-  <script src="script.js"></script>
+
+  <script type="module" src="script.js"></script>
 </html>

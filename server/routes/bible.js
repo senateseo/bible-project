@@ -1,6 +1,7 @@
 const router = require("express").Router();
-const { getphrase } = require("../controllers/bible");
+const { getphrase, getPhraseWithKeyword } = require("../controllers/bible");
 
 router.post("/", getphrase);
+router.get("/", getPhraseWithKeyword);
 
 module.exports = router;

@@ -1,15 +1,151 @@
+import { lang } from "./config.js";
+
 const searchBox = document.querySelector("#search-box");
 const searchInput = document.querySelector("input");
 const resultBox = document.querySelector("#result");
 const resultMetaContainer = document.querySelector("#result-meta-container");
 const copyBtn = document.querySelector("#btn-copy");
 const clearBtn = document.querySelector("#btn-clear");
+const dropdownBtn = document.querySelector("#menu-button");
+const dropdownVersion = document.querySelector("#dropdown-version");
+const dropdownOptionContainer = document.querySelector("#dropdown-container");
+
+const initHelpContainer = document.querySelector("#init__text");
+
+const bibleOptions = [
+  {
+    label: "개역개정 한글",
+    value: 0,
+    isDefault: true,
+  },
+  {
+    label: "KJV (King James Version)",
+    value: 1,
+    isDefault: false,
+  },
+];
+
+let SYSTEM_LANG = navigator.language;
+let currentBibleVersion =
+  lang[SYSTEM_LANG] === "en" ? bibleOptions[1] : bibleOptions[0];
+let isDropdownClicked = false;
+/* i18n Multi-Langugae Supports */
+i18next.init({
+  lng: lang[SYSTEM_LANG],
+  debug: true,
+  resources: {
+    ko: {
+      translation: {
+        helpMsg: "아래와 같이 검색하실 수 있습니다.",
+        searchPlaceholder: "찾으실 성경 구절을 입력하세요 (ex 마 1:1-10)",
+        example: `(예시)
+
+        - 마태복음 1:10
+        
+        - 마 1:10-20
+        
+        - 마 1:10~20
+        `,
+        noResultMsg: "찾으시는 결과가 없습니다",
+        copyLabel: "복사",
+        copiedLabel: "복사됨",
+      },
+    },
+    en: {
+      translation: {
+        helpMsg: "You can search the bible in this way: ",
+        searchPlaceholder: "Enter Search Keyword. (ex: Gen 1:10)",
+        example: `<p>Ex:</p>
+        <p>- Genesis 1:10</p>
+        <p>- Gen 1:10-20</p>
+        <p>- Gen 1:10~20</p>`,
+        noResultMsg: "No results",
+        copyLabel: "Copy",
+        copiedLabel: "Copied",
+      },
+    },
+  },
+});
+
+/* Set init dropdown option */
+dropdownBtn.innerHTML = `${currentBibleVersion["label"]} <svg
+  class="-mr-1 ml-2 h-5 w-5"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 20 20"
+  fill="currentColor"
+  aria-hidden="true"
+>
+  <path
+    fill-rule="evenodd"
+    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+    clip-rule="evenodd"
+  />
+</svg>`;
+
+/* Set Searchbar placeholder */
+searchInput.placeholder = i18next.t("searchPlaceholder");
+
+/* Set Help Message */
+initHelpContainer.innerHTML = `
+<p>${i18next.t("helpMsg")}</p>
+<br/>
+<p>${i18next.t("example")}</p>
+`;
 
 const noResultInnerHTML = `
 <div class="w-full flex justify-center items-center my-2">
-<span class="text-gray-500 text-sm">찾으시는 결과가 없습니다</span>
+<span class="text-gray-500 text-sm">${i18next.t("noResultMsg")}</span>
 </div>
 `;
+
+const onPressDropdownOption = (label, value) => {
+  if (!isDropdownClicked) return;
+  // set option
+  currentBibleVersion = value;
+  // change button text
+  dropdownBtn.innerHTML = `${label}  <svg
+  class="-mr-1 ml-2 h-5 w-5"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 20 20"
+  fill="currentColor"
+  aria-hidden="true"
+>
+  <path
+    fill-rule="evenodd"
+    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+    clip-rule="evenodd"
+  />
+</svg>`;
+  // close dropdown
+  onCloseDropdownOption();
+};
+
+/* Set Dropdown Options Init */
+const optionsHTML = bibleOptions.map((option, idx) => {
+  return `
+  <a
+  class="text-gray-700 block px-4 py-2 text-sm ${
+    isDropdownClicked ? "cursor-pointer" : ""
+  }"
+  role="menuitem"
+  
+  value=${option.value}
+  id="menu-item-${idx}"
+  >${option.label}
+  </a>
+  `;
+});
+dropdownOptionContainer.innerHTML = optionsHTML.join().replace(/,/g, "");
+
+for (let i = 0; i < bibleOptions.length; i++) {
+  const qSelect = document.querySelector(`#menu-item-${i}`);
+
+  console.log(qSelect);
+  qSelect.addEventListener("click", () =>
+    onPressDropdownOption(qSelect.innerText, qSelect.getAttribute("value"))
+  );
+}
+
 let isSearching = false;
 copyBtn.style.opacity = 0;
 const onChangeSearchInput = async (e) => {
@@ -36,7 +172,8 @@ const onChangeSearchInput = async (e) => {
       prod: "http://15.165.160.72:3000",
     };
     const { book, chapter, from, to } = parseText(e.target.value);
-    let res = await fetch(`${API_URL.prod}/bible`, {
+
+    let res = await fetch(`${API_URL.local}/bible`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -46,6 +183,7 @@ const onChangeSearchInput = async (e) => {
         chapter: parseInt(chapter),
         from: parseInt(from),
         to: parseInt(to),
+        version: lang[SYSTEM_LANG] === "en" ? 1 : 0,
       }),
     });
 
@@ -71,7 +209,7 @@ const onChangeSearchInput = async (e) => {
       result.bible.forEach((row, idx) => {
         innerHTML += `
           <div id="phrase" class="flex my-2 text-gray-600">
-            <span class="mr-2" >${row.paragraph}</span>
+            <span class="mr-2" >${row.verse}</span>
             <div>
               ${row.sentence}
             </div>
@@ -82,12 +220,11 @@ const onChangeSearchInput = async (e) => {
       // Render Result meta
 
       resultMetaContainer.innerHTML = `
-      <span class="text-sm text-gray-700">성경말씀 :</span>
       <div id="result-meta" class="text-sm text-black font-bold mx-2">
         ${info.long_label} ${info.chapter}장 ${
         totalLength == 1
-          ? `${info.paragraph}절`
-          : `${info.paragraph}-${info.paragraph + totalLength - 1} 절`
+          ? `${info.verse}절`
+          : `${info.verse}-${info.verse + totalLength - 1} 절`
       }
       </div>
       `;
@@ -114,17 +251,24 @@ const isWindows = () => {
 let isValid = false;
 
 const parseText = (text) => {
-  let parsedBook = text.split(" ");
-  let book = parsedBook[0];
-  book = getBookIndex(book.trim());
+  const REGEX_BOOK = {
+    en: /[a-zA-Z]+/g,
+    ko: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/,
+  };
 
-  let parsedChapter = parsedBook[1].split(":");
-  let chapter = parsedChapter[0];
+  let parsedBook = text.match(REGEX_BOOK[lang[SYSTEM_LANG]]);
+  let book = parsedBook[0];
+
+  book = getBookIndex(book.trim(), lang[SYSTEM_LANG]);
+
+  let parsedChapter = text.match(/[0-9]:[0-9-0-9]+/g);
+
+  let chapter = parsedChapter[0].split(":")[0];
   chapter = chapter.trim();
 
   let from;
   let to;
-  let parsedFromTo = parsedChapter[1].split(/-|~/);
+  let parsedFromTo = parsedChapter[0].split(":")[1].split(/-|~/);
 
   if (parsedFromTo.length <= 1) {
     from = parsedFromTo[0];
@@ -215,7 +359,7 @@ const turnToCopied = () => {
     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
   />
 </svg>
-복사됨
+${i18next.t("copiedLabel")}
   `;
 
   copyBtn.removeEventListener("click", onPressCopyWholeText);
@@ -248,7 +392,7 @@ const turnToNotCopied = () => {
     d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
   />
 </svg>
-복사
+${i18next.t("copyLabel")}
   `;
 
   copyBtn.addEventListener("click", onPressCopyWholeText);
@@ -289,8 +433,46 @@ const onKeydown = (e) => {
   }
 };
 
+const onOpenDropdownOption = () => {
+  isDropdownClicked = true;
+  dropdownVersion.classList.remove(
+    "transform",
+    "disabled:opacity-0",
+    "scale-95"
+  );
+  dropdownVersion.classList.add(
+    "transform",
+    "opacity-100",
+    "scale-100",
+    "z-10"
+  );
+};
+
+const onCloseDropdownOption = () => {
+  isDropdownClicked = false;
+
+  dropdownVersion.classList.remove(
+    "transform",
+    "opacity-100",
+    "scale-100",
+    "z-10"
+  );
+  dropdownVersion.classList.add("transform", "disabled:opacity-0", "scale-95");
+};
+
+const onPressDropdownBtn = (e) => {
+  e.preventDefault();
+
+  if (isDropdownClicked) {
+    onCloseDropdownOption();
+  } else {
+    onOpenDropdownOption();
+  }
+};
+
 searchInput.addEventListener("keyup", debounce(onChangeSearchInput, 300));
 clearBtn.addEventListener("click", onPressClearSearchInput);
 copyBtn.addEventListener("click", onPressCopyWholeText);
+dropdownBtn.addEventListener("click", onPressDropdownBtn);
 
 window.addEventListener("keydown", onKeydown);

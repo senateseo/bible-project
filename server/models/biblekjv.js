@@ -1,14 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "bible",
+    "biblekjv",
     {
-      idx: {
+      id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      cate: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+        primaryKey: true,
       },
       book: {
         type: DataTypes.INTEGER,
@@ -26,21 +23,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT("tiny"),
         allowNull: false,
       },
-      testament: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
-      },
-      long_label: {
-        type: DataTypes.STRING(30),
-        allowNull: false,
-      },
-      short_label: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
-      },
     },
     {
-      tableName: "t_gaehyuk",
+      tableName: "t_kjv",
       timestamps: false,
     }
   );
