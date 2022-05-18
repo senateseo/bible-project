@@ -2,24 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
-    />
     <link href="output.css" rel="stylesheet" />
     <title>Bible Extension</title>
+    <script src="i18next.min.js"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/i18next/17.0.18/i18next.min.js"
       type="text/javascript"
     ></script>
   </head>
   <body class="w-80 h-80 p-4">
-    <div class="relative inline-block text-left m-4">
+    <div class="relative inline-block text-left mx-2 mb-2">
       <div>
         <button
           type="button"
-          class="inline-flex justify-center w-full border-b-2 border-gray-300 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+          class="inline-flex justify-center w-full border-b-2 border-gray-300 px-2 py-1 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50"
           id="menu-button"
           aria-expanded="true"
           aria-haspopup="true"
@@ -58,7 +54,7 @@
 
     <div
       id="search-box"
-      class="transition-all transform bg-gray-100 border rounded-md shadow-md flex flex-col space-y-2"
+      class="transition-all transform bg-gray-100 border rounded-md shadow-md flex mx-2 flex-col space-y-2"
     >
       <div class="flex items-center bg-white rounded-md">
         <input
@@ -75,7 +71,10 @@
     </div>
     <div class="px-4 py-2">
       <div class="flex justify-between">
-        <div id="result-meta-container" class="flex"></div>
+        <div
+          id="result-meta-container"
+          class="flex justify-center items-center"
+        ></div>
         <button
           id="btn-copy"
           type="button"

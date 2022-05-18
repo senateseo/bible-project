@@ -12,22 +12,25 @@ const dropdownOptionContainer = document.querySelector("#dropdown-container");
 
 const initHelpContainer = document.querySelector("#init__text");
 
-const bibleOptions = [
-  {
-    label: "개역개정 한글",
-    value: 0,
-    isDefault: true,
-  },
-  {
-    label: "KJV (King James Version)",
-    value: 1,
-    isDefault: false,
-  },
-];
+const bibleOptions = {
+  ko: [
+    {
+      label: "개역개정 한글",
+      value: 0,
+      isDefault: true,
+    },
+  ],
+  en: [
+    {
+      label: "KJV (King James Version)",
+      value: 1,
+      isDefault: false,
+    },
+  ],
+};
 
 let SYSTEM_LANG = navigator.language;
-let currentBibleVersion =
-  lang[SYSTEM_LANG] === "en" ? bibleOptions[1] : bibleOptions[0];
+let currentBibleVersion = bibleOptions[lang[SYSTEM_LANG]][0];
 let isDropdownClicked = false;
 /* i18n Multi-Langugae Supports */
 i18next.init({
@@ -121,26 +124,24 @@ const onPressDropdownOption = (label, value) => {
 };
 
 /* Set Dropdown Options Init */
-const optionsHTML = bibleOptions.map((option, idx) => {
+const optionsHTML = bibleOptions[lang[SYSTEM_LANG]].map((option, idx) => {
   return `
   <a
-  class="text-gray-700 block px-4 py-2 text-sm ${
-    isDropdownClicked ? "cursor-pointer" : ""
-  }"
+  class="text-gray-700 block px-4 py-2 text-xs cursor-pointer"
   role="menuitem"
-  
   value=${option.value}
   id="menu-item-${idx}"
   >${option.label}
   </a>
   `;
 });
+
 dropdownOptionContainer.innerHTML = optionsHTML.join().replace(/,/g, "");
 
-for (let i = 0; i < bibleOptions.length; i++) {
+for (let i = 0; i < bibleOptions[lang[SYSTEM_LANG]].length; i++) {
+  console.log(i);
   const qSelect = document.querySelector(`#menu-item-${i}`);
 
-  console.log(qSelect);
   qSelect.addEventListener("click", () =>
     onPressDropdownOption(qSelect.innerText, qSelect.getAttribute("value"))
   );
@@ -220,11 +221,11 @@ const onChangeSearchInput = async (e) => {
       // Render Result meta
 
       resultMetaContainer.innerHTML = `
-      <div id="result-meta" class="text-sm text-black font-bold mx-2">
-        ${info.long_label} ${info.chapter}장 ${
+      <div id="result-meta" class="text-sm text-black font-bold">
+        ${info.long_label} ${info.chapter}:${
         totalLength == 1
-          ? `${info.verse}절`
-          : `${info.verse}-${info.verse + totalLength - 1} 절`
+          ? `${info.verse}`
+          : `${info.verse}-${info.verse + totalLength - 1} `
       }
       </div>
       `;
