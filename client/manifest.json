@@ -1,13 +1,15 @@
 {
-  "name": "Bible Search(KOR)",
+  "name": "__MSG_appName__",
   "version": "0.0.1",
-  "description": "Bible Search를 통해 어디서나 성경을 쉽게 검색하세요",
+  "description": "__MSG_appDesc__",
+  "default_locale": "ko",
   "manifest_version": 3,
   "author": "Sangwon Seo",
   "permissions": [],
   "action": {
     "default_popup": "index.html",
-    "default_title": "Bible Search"
+    "default_title": "Bible Search",
+    "default_locale": "ko"
   },
   "icons": {
     "16": "icons/bible-16.png",

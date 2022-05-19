@@ -41,14 +41,10 @@ i18next.init({
       translation: {
         helpMsg: "아래와 같이 검색하실 수 있습니다.",
         searchPlaceholder: "찾으실 성경 구절을 입력하세요 (ex 마 1:1-10)",
-        example: `(예시)
-
-        - 마태복음 1:10
-        
-        - 마 1:10-20
-        
-        - 마 1:10~20
-        `,
+        example: `<p>예시:</p>
+        <p>- 창세기 1:10</p>
+        <p>- 창 1:10-20</p>
+        <p>- 창 1:10~20</p>`,
         noResultMsg: "찾으시는 결과가 없습니다",
         copyLabel: "복사",
         copiedLabel: "복사됨",
@@ -174,7 +170,7 @@ const onChangeSearchInput = async (e) => {
     };
     const { book, chapter, from, to } = parseText(e.target.value);
 
-    let res = await fetch(`${API_URL.local}/bible`, {
+    let res = await fetch(`${API_URL.prod}/bible`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
