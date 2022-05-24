@@ -30,6 +30,13 @@ const bibleOptions = {
 };
 
 let SYSTEM_LANG = navigator.language;
+
+/* Check Language Type */
+if (SYSTEM_LANG.startsWith("ko")) {
+  SYSTEM_LANG = "ko";
+} else if (SYSTEM_LANG.startsWith("en")) {
+  SYSTEM_LANG = "en";
+}
 let currentBibleVersion = bibleOptions[lang[SYSTEM_LANG]][0];
 let isDropdownClicked = false;
 /* i18n Multi-Langugae Supports */
@@ -135,7 +142,6 @@ const optionsHTML = bibleOptions[lang[SYSTEM_LANG]].map((option, idx) => {
 dropdownOptionContainer.innerHTML = optionsHTML.join().replace(/,/g, "");
 
 for (let i = 0; i < bibleOptions[lang[SYSTEM_LANG]].length; i++) {
-  console.log(i);
   const qSelect = document.querySelector(`#menu-item-${i}`);
 
   qSelect.addEventListener("click", () =>
@@ -247,26 +253,28 @@ const isWindows = () => {
 
 let isValid = false;
 
+/* Parse Search Keyword */
 const parseText = (text) => {
   const REGEX_BOOK = {
     en: /[a-zA-Z]+/g,
     ko: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/,
   };
 
+  /* Parse Book */
   let parsedBook = text.match(REGEX_BOOK[lang[SYSTEM_LANG]]);
   let book = parsedBook[0];
-
   book = getBookIndex(book.trim(), lang[SYSTEM_LANG]);
 
-  let parsedChapter = text.match(/[0-9]:[0-9-0-9]+/g);
-
+  /* Parse Chapter */
+  let parsedChapter = text.match(/[0-9]+(:|[가-힣])+[0-9-~0-9]+/g);
   let chapter = parsedChapter[0].split(":")[0];
   chapter = chapter.trim();
+  console.log(parsedChapter);
 
   let from;
   let to;
-  let parsedFromTo = parsedChapter[0].split(":")[1].split(/-|~/);
-
+  let parsedFromTo = parsedChapter[0].split(/[가-힣]|:/)[1].split(/[-~]/);
+  console.log(parsedFromTo);
   if (parsedFromTo.length <= 1) {
     from = parsedFromTo[0];
   } else {
