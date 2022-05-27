@@ -523,6 +523,19 @@ const bookPrefix = {
   },
 };
 
+const REGEX_BOOK = {
+  en: /[a-zA-Z]+/g,
+  ko: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]+/,
+};
+
+/**
+ * Returns Bible book index
+ *
+ * @param {string} prefix The parsed book string from user input
+ * @param {string} version "language"
+ * @returns {number | undefined} bible book index
+ */
+
 const getBookIndex = (prefix, version) => {
   const idx = Object.values(bookPrefix).findIndex((prefixArr) => {
     if (version === "en") {
@@ -537,3 +550,52 @@ const getBookIndex = (prefix, version) => {
 
   return idx;
 };
+
+/**
+ * Returns parsed data
+ * @param {string} text text to parse
+ * @param {string} lang language string
+ * @returns
+ */
+const parseText = (text, lang) => {
+  /* Parse Book */
+  let parsedBook = text.match(REGEX_BOOK[lang]);
+
+  let book = parsedBook[0];
+
+  book = getBookIndex(book.trim(), lang);
+
+  // If book is not found
+  if (book === -1) {
+    return {
+      text,
+      version: lang,
+    };
+  } else {
+    /* Parse Chapter */
+    let parsedChapter = text.match(/[0-9]+(:|[가-힣])+[0-9-~0-9]+/g);
+    if (!parsedChapter || !parsedChapter.length) return {};
+    let chapter = parsedChapter[0].split(":")[0];
+    chapter = chapter.trim();
+
+    let from;
+    let to;
+    let parsedFromTo = parsedChapter[0].split(/[가-힣]|:/)[1].split(/[-~]/);
+
+    if (parsedFromTo.length <= 1) {
+      from = parsedFromTo[0];
+    } else {
+      from = parsedFromTo[0];
+      to = parsedFromTo[1];
+    }
+
+    return {
+      book,
+      chapter,
+      from,
+      to,
+    };
+  }
+};
+
+module.exports = { parseText };

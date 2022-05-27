@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1653556776395" clover="3.2.0">
+  <project timestamp="1653556776395" name="All files">
+    <metrics statements="35" coveredstatements="18" conditionals="19" coveredconditionals="7" methods="5" coveredmethods="4" elements="59" coveredelements="29" complexity="0" loc="35" ncloc="35" packages="1" files="3" classes="3"/>
+    <file name="config.js" path="/Users/sangwonseo/Dev/bible-ext/client/src/config.js">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <line num="1" count="1" type="stmt"/>
+    </file>
+    <file name="prefix.js" path="/Users/sangwonseo/Dev/bible-ext/client/src/prefix.js">
+      <metrics statements="10" coveredstatements="9" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="3"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="534" count="1" type="stmt"/>
+      <line num="535" count="2" type="stmt"/>
+      <line num="536" count="67" type="cond" truecount="1" falsecount="1"/>
+      <line num="537" count="67" type="stmt"/>
+      <line num="538" count="67" type="stmt"/>
+      <line num="539" count="409" type="stmt"/>
+      <line num="542" count="67" type="cond" truecount="2" falsecount="0"/>
+      <line num="543" count="0" type="stmt"/>
+      <line num="546" count="2" type="stmt"/>
+    </file>
+    <file name="util.js" path="/Users/sangwonseo/Dev/bible-ext/client/src/util.js">
+      <metrics statements="24" coveredstatements="8" conditionals="15" coveredconditionals="4" methods="2" coveredmethods="1"/>
+      <line num="4" count="1" type="cond" truecount="0" falsecount="1"/>
+      <line num="5" count="5" type="cond" truecount="2" falsecount="0"/>
+      <line num="6" count="2" type="stmt"/>
+      <line num="7" count="3" type="cond" truecount="2" falsecount="0"/>
+      <line num="8" count="2" type="stmt"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="10" count="4" type="stmt"/>
+      <line num="13" count="1" type="stmt"/>
+      <line num="18" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="19" count="0" type="stmt"/>
+      <line num="20" count="0" type="stmt"/>
+      <line num="21" count="0" type="stmt"/>
+      <line num="23" count="0" type="stmt"/>
+      <line num="24" count="0" type="stmt"/>
+      <line num="25" count="0" type="stmt"/>
+      <line num="28" count="0" type="cond" truecount="0" falsecount="4"/>
+      <line num="29" count="0" type="cond" truecount="0" falsecount="4"/>
+      <line num="31" count="0" type="stmt"/>
+      <line num="34" count="0" type="stmt"/>
+      <line num="35" count="0" type="stmt"/>
+      <line num="38" count="0" type="stmt"/>
+      <line num="39" count="0" type="stmt"/>
+      <line num="41" count="0" type="stmt"/>
+      <line num="43" count="0" type="stmt"/>
+    </file>
+  </project>
+</coverage>
