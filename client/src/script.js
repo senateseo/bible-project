@@ -4,13 +4,13 @@ const searchBox = document.querySelector("#search-box");
 const searchInput = document.querySelector("input");
 const resultBox = document.querySelector("#result");
 const resultMetaContainer = document.querySelector("#result-meta-container");
-const copyBtn = document.querySelector("#btn-copy");
 const clearBtn = document.querySelector("#btn-clear");
 const dropdownBtn = document.querySelector("#menu-button");
 const dropdownVersion = document.querySelector("#dropdown-version");
 const dropdownOptionContainer = document.querySelector("#dropdown-container");
 const initHelpContainer = document.querySelector("#init__text");
 const alertModal = document.querySelector("#modal");
+let copyBtn = document.querySelector("#btn-copy");
 
 const bibleOptions = {
   ko: [
@@ -58,7 +58,7 @@ i18next.init({
     ko: {
       translation: {
         helpMsg: "아래와 같이 검색하실 수 있습니다.",
-        searchPlaceholder: "찾으실 성경 구절을 입력하세요 (ex 마 1:1-10)",
+        searchPlaceholder: "키워드를 입력하세요 (ex 마 1:1-10 혹은 '성령')",
         example: `<p>예시:</p>
         <p>- 창세기 1:10</p>
         <p>- 창 1:10-20</p>
@@ -110,18 +110,22 @@ dropdownBtn.innerHTML = `${currentBibleVersion["label"]} <svg
 /* Set Searchbar placeholder */
 searchInput.placeholder = i18next.t("searchPlaceholder");
 
-/* Set Help Message */
-initHelpContainer.innerHTML = `
-<p>${i18next.t("helpMsg")}</p>
-<br/>
-<p>${i18next.t("example")}</p>
-`;
-
 const noResultInnerHTML = `
 <div class="w-full flex justify-center items-center my-2">
 <span class="text-gray-500 text-sm">${i18next.t("noResultMsg")}</span>
 </div>
 `;
+
+const initResultInnerHTML = `
+<div id="init__text" class="flex flex-col text-gray-500">
+<p>${i18next.t("helpMsg")}</p>
+<br/>
+<p>${i18next.t("example")}</p>
+</div>
+`;
+
+/* Set Help Message */
+resultBox.innerHTML = initResultInnerHTML;
 
 const onPressDropdownOption = (label, value) => {
   if (!isDropdownClicked) return;
@@ -180,6 +184,12 @@ let searchMode;
 let isSearching = false;
 copyBtn.style.opacity = 0;
 const onChangeSearchInput = async (e) => {
+  if (e.target.value === "") {
+    /* Set Help Message */
+    setInitResult();
+    return;
+  }
+
   try {
     if (e.target.value.length < 2) return;
     searchKeyword = e.target.value;
@@ -208,7 +218,7 @@ const onChangeSearchInput = async (e) => {
       .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
       .join("&");
 
-    let res = await fetch(`${API_URL.local}/bible?${query}`, {
+    let res = await fetch(`${API_URL.prod}/bible?${query}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -217,9 +227,13 @@ const onChangeSearchInput = async (e) => {
 
     const result = await res.json();
 
+    //If it returns empty object
+    if (Object.keys(result).length === 0) {
+      setNoResult();
+      return;
+    }
     isSearching = false;
     let totalLength;
-
     let innerHTML = "";
     searchMode = result.mode;
 
@@ -229,10 +243,8 @@ const onChangeSearchInput = async (e) => {
         const info = result.bible[0];
 
         if (!totalLength) {
-          innerHTML = noResultInnerHTML;
+          setNoResult();
         } else {
-          turnToNotCopied();
-
           // If the mode is search range
           result.bible.forEach((row, idx) => {
             innerHTML += `
@@ -249,6 +261,7 @@ const onChangeSearchInput = async (e) => {
 
           //Render Result meta
           resultMetaContainer.innerHTML = `
+          <div class="flex justify-center items-center">
               <div id="result-meta" class="text-sm text-black py-2">
               ${i18next.t("searchResult")} : <span class="font-bold">${
             bookNames[info.book - 1][langIdx]
@@ -258,8 +271,18 @@ const onChangeSearchInput = async (e) => {
               : `${info.verse}-${info.verse + totalLength - 1} `
           }
             </span>
+           
               </div>
+             
+            </div>
+              <button
+              id="btn-copy"
+              type="button"
+              class="transition ease-in-out hover:scale-110 text-xs inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 opacity-100"
+            >hi</button>
             `;
+          copyBtn = document.querySelector("#btn-copy");
+          turnToNotCopied();
           //Render Copy button
           copyBtn.style.opacity = 100;
         }
@@ -270,9 +293,8 @@ const onChangeSearchInput = async (e) => {
         totalLength = result.bible.count;
 
         if (!totalLength) {
-          innerHTML = noResultInnerHTML;
+          setNoResult();
         } else {
-          turnToNotCopied();
           // If the mode is search including keyword
           // clear result container
           resultBox.innerHTML = "";
@@ -306,6 +328,9 @@ const onChangeSearchInput = async (e) => {
 
           //Render Result meta
           resultMetaContainer.innerHTML = `
+          <div
+          class="flex justify-center items-center"
+        >
            <div id="result-meta" class="text-sm  py-2">
            ${i18next.t("searchResult")} : ${i18next.t(
             "total"
@@ -313,6 +338,8 @@ const onChangeSearchInput = async (e) => {
             "counts"
           )}
            </div>
+           </div>
+           
          `;
 
           copyBtn.style.opacity = 0;
@@ -322,11 +349,23 @@ const onChangeSearchInput = async (e) => {
       default:
         break;
     }
+
     resultBox.style.opacity = 100;
   } catch (e) {
     isSearching = false;
     resultBox.innerHTML = noResultInnerHTML;
   }
+};
+
+const setInitResult = () => {
+  resultBox.innerHTML = initResultInnerHTML;
+  resultMetaContainer.innerHTML = "";
+  return;
+};
+
+const setNoResult = () => {
+  /* Set Result box to empty */
+  resultBox.innerHTML = noResultInnerHTML;
 };
 
 const onPressClearSearchInput = (e) => {
@@ -335,7 +374,6 @@ const onPressClearSearchInput = (e) => {
   searchInput.value = "";
   searchInput.focus();
 };
-let isOn = false;
 
 const onPressCopyWholeText = (e) => {
   e.preventDefault();
@@ -510,7 +548,7 @@ const loadMore = (q, page, limit) => {
 
       if (hasMoreQuotes(page, limit, total)) {
         // call the API to get quotes
-        let res = await fetch(`${API_URL.local}/bible?${query}`, {
+        let res = await fetch(`${API_URL.prod}/bible?${query}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json;charset=utf-8",

@@ -1,4 +1,4 @@
-import { getBookIndex } from "./prefix";
+import { getBookIndex } from "../../server/utils/prefix";
 import { getSystemLang } from "./util";
 
 test("Returns lang type for the input", () => {
