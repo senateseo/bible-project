@@ -1,4 +1,4 @@
-# bible-search-extension
+# Bible Search Chrome extension
 
 This is a project repository for bible search Chrome extension.
 
