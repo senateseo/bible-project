@@ -13,5 +13,5 @@ You can download this extension on [chrome web store](https://chrome.google.com/
 
 
 ## Next Features 🧪
-[-] Search whole chapters
-[-] Export in PPT Format
+- [ ] Search whole chapters
+- [ ] Export in PPT Format
