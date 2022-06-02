@@ -10,3 +10,8 @@ This is a project repository for bible search Chrome extension.
 ## Demo
 
 You can download this extension on [chrome web store](https://chrome.google.com/webstore/detail/%EC%84%B1%EA%B2%BD-%EC%B0%BE%EA%B8%B0/lcimelgcehidimkkleiknejjiicieekb)
+
+
+## Next Features 🧪
+[-] Search whole chapters
+[-] Export in PPT Format
