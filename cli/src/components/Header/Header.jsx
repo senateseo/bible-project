@@ -1,15 +1,10 @@
 import React from "react";
-import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import { classNames } from "../../utils/util";
+import { Link, useLocation } from "react-router-dom";
 
-const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
-];
+const Header = ({ navigation }) => {
+  const location = useLocation();
 
-const Header = () => {
   return (
     <>
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -19,13 +14,13 @@ const Header = () => {
             <div className="flex-shrink-0 flex items-center">
               <img
                 className="block lg:hidden h-8 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                alt="Workflow"
+                src="/logo.png"
+                alt="Logo"
               />
               <img
                 className="hidden lg:block h-8 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg"
-                alt="Workflow"
+                src="/logo.png"
+                alt="Logo"
               />
             </div>
             <div className="hidden sm:block sm:ml-6">
@@ -35,27 +30,18 @@ const Header = () => {
                     key={item.name}
                     href={item.href}
                     className={classNames(
-                      item.current
-                        ? "bg-gray-900 text-white"
-                        : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                      location.pathname === item.href
+                        ? "font-bold text-white bg-indigo-600"
+                        : "text-gray-300 hover:bg-gray-100 hover:text-black",
                       "px-3 py-2 rounded-md text-sm font-medium"
                     )}
                     aria-current={item.current ? "page" : undefined}
                   >
-                    {item.name}
+                    <Link to={item.href}>{item.name}</Link>
                   </a>
                 ))}
               </div>
             </div>
-          </div>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button
-              type="button"
-              className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-            >
-              <span className="sr-only">View notifications</span>
-              <BellIcon className="h-6 w-6" aria-hidden="true" />
-            </button>
           </div>
         </div>
       </div>

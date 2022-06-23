@@ -1,9 +1,8 @@
-import logo from "./logo.svg";
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { objToQueryParams } from "./utils/util";
 import Card from "./components/Card/Card";
+import ComboBox from "./components/Combobox";
+import Searchbar from "./components/Searchbar";
 
 /* API URL */
 const API_URL = {
@@ -16,9 +15,23 @@ const API_URL = {
 //   lang: systemLang,
 // };
 
+const options = [
+  {
+    id: 0,
+    name: "KJV",
+    value: "en",
+  },
+  {
+    id: 1,
+    name: "개역개정",
+    value: "ko",
+  },
+];
+
 function App() {
-  const [query, setQuery] = useState();
-  const [version, setVersion] = useState("en");
+  const inputRef = useRef(null);
+  const [query, setQuery] = useState("");
+  const [version, setVersion] = useState(options[0]);
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
 
@@ -26,14 +39,21 @@ function App() {
     setQuery(e.target.value);
   };
 
-  const onSelectOption = (e) => {
-    setVersion(e.target.value);
+  const onClearInput = () => {
+    setQuery("");
+    inputRef.current.focus();
+  };
+
+  const onKeyDownEnter = (e) => {
+    if (e.code === "Enter") {
+      onSearch();
+    }
   };
 
   const onSearch = async () => {
     const q = objToQueryParams({
       keyword: query,
-      lang: version,
+      lang: version.value,
     });
 
     try {
@@ -58,23 +78,23 @@ function App() {
 
   return (
     <>
-      <Header />
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-        <select onChange={onSelectOption}>
-          <option value="en">KJV</option>
-          <option value="ko">개역개정</option>
-        </select>
-        <input
-          type="text"
-          placeholder="enter the phrase"
-          onChange={handleSearchInput}
-        />
-        <button onClick={() => onSearch()}>Search</button>
+      <div className="min-h-[784px] flex flex-col justify-center items-center max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 ">
+        <div className="flex w-full justify-center space-x-6 max-w-3xl">
+          <ComboBox option={version} setOption={setVersion} options={options} />
+          <Searchbar
+            ref={inputRef}
+            placeholder="Enter the phrase"
+            value={query}
+            onChange={handleSearchInput}
+            onClose={onClearInput}
+            onKeydownEnter={onKeyDownEnter}
+          />
+        </div>
 
-        <ul className="flex flex-col space-y-4">
+        <ul className="flex flex-col space-y-4 max-w-3xl my-4">
           {isLoading ? (
             <LoadingIndicator />
-          ) : !results ? (
+          ) : !results.length ? (
             <EmptyResults />
           ) : (
             results.map((elem, id) => {
@@ -87,7 +107,6 @@ function App() {
           )}
         </ul>
       </div>
-      <Footer />
     </>
   );
 }

@@ -12,7 +12,7 @@ const Card = ({ data }) => {
   };
   return (
     <div
-      className="p-2 rounded-md border border-indigo-300 cursor-pointer hover:border-indigo-500"
+      className="p-4 rounded-md border cursor-pointer hover:border-gray-500"
       onClick={() => onHandleClick()}
     >
       <div>
