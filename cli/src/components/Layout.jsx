@@ -5,7 +5,7 @@ import Header from "./Header/Header";
 
 const navigation = [
   {
-    name: "성경 검색",
+    name: "Bible",
     href: "/",
     current: true,
   },

@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchIcon, XIcon } from "@heroicons/react/solid";
+import { XIcon } from "@heroicons/react/solid";
 
 const Searchbar = React.forwardRef(
   ({ placeholder, value, onChange, onKeydownEnter, onClose }, ref) => {
