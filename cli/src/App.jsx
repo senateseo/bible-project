@@ -8,7 +8,7 @@ import { Modal } from "./components/Modal";
 
 const API_URL = {
   local: "http://localhost:3000",
-  prod: "http://15.165.160.72:3000",
+  prod: "https://hisword.site:8443",
 };
 
 const options = [
