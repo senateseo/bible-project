@@ -16,7 +16,7 @@ export const Modal = ({ isShowing, hide, msg }) =>
       >
         <div className="w-screen flex justify-center">
           <div
-            className="fixed top-3.5 z-10 w-100 h-100 overflow-x-hidden overflow-y-hidden"
+            className="fixed bottom-5 z-10 w-100 h-100 overflow-x-hidden overflow-y-hidden"
             aria-modal
             aria-hidden
             tabIndex={-1}

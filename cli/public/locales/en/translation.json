@@ -1,0 +1,19 @@
+{
+  "title": "Welcome to React!!",
+  "header": {
+    "bible": "Bible",
+    "about": "About"
+  },
+  "search": {
+    "placeholder": "Enter the keyword",
+    "helper": {
+      "text": "You can search the bible in this way",
+      "ex1": "john 3:16",
+      "ex2": "john 3:16-17",
+      "ex3": "daniel"
+    }
+  },
+  "modal": {
+    "msg_copy": "Copied to Clipboard!"
+  }
+}

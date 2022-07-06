@@ -4,12 +4,12 @@ import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { classNames } from "../utils/util";
 
-const ComboBox = ({ option, setOption, options }) => {
+const ComboBox = ({ selectedOption, setOption, options }) => {
   return (
     <Menu as="div" className="relative inline-block">
       <div>
-        <Menu.Button className="inline-flex justify-between w-30 sm:w-40 rounded-md border shadow-sm px-4 py-4 sm:py-4 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-offset-gray-100 ">
-          {option.name}
+        <Menu.Button className="inline-flex justify-between w-30 sm:w-40 rounded-md border shadow-sm px-4 py-2 sm:py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-offset-gray-100 ">
+          {selectedOption.label}
           <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
         </Menu.Button>
       </div>
@@ -34,7 +34,7 @@ const ComboBox = ({ option, setOption, options }) => {
                       "block px-4 py-2 text-sm cursor-pointer"
                     )}
                   >
-                    {option.name}
+                    {option.label}
                   </div>
                 )}
               </Menu.Item>

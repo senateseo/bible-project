@@ -1,8 +1,10 @@
 import React from "react";
 import { copyToClipboard } from "../../utils/util";
 import { books } from "../../data/books";
+import { useTranslation } from "react-i18next";
 
 const Card = ({ data, onClick }) => {
+  const { t } = useTranslation("translation", { keyPrefix: "modal" });
   const onHandleClick = () => {
     // TODO : set msg to copy
     const msgToCopy = "";
@@ -10,7 +12,7 @@ const Card = ({ data, onClick }) => {
     console.log(msgToCopy);
     copyToClipboard(msgToCopy);
     // TODO: Pop modal up
-    onClick("copied to clipboard!");
+    onClick(t("msg_copy"));
   };
   return (
     <div
