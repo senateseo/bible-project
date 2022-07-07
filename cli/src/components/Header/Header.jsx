@@ -35,16 +35,20 @@ const Header = ({ navigation }) => {
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden"></div>
           <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-between">
             <div className="flex-shrink-0 flex justify-between">
-              <img
-                className="block lg:hidden h-8 w-auto"
-                src="/logo.png"
-                alt="Logo"
-              />
-              <img
-                className="hidden lg:block h-8 w-auto"
-                src="/logo.png"
-                alt="Logo"
-              />
+              <Link to="/">
+                <img
+                  className="block lg:hidden h-8 w-auto cursor-pointer"
+                  src="/logo.png"
+                  alt="Logo"
+                />
+              </Link>
+              <Link to="/">
+                <img
+                  className="hidden lg:block h-8 w-auto cursor-pointer"
+                  src="/logo.png"
+                  alt="Logo"
+                />
+              </Link>
             </div>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex space-x-4">

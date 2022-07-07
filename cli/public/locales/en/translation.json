@@ -15,5 +15,19 @@
   },
   "modal": {
     "msg_copy": "Copied to Clipboard!"
+  },
+  "about": {
+    "catch_phrase": {
+      "content": "In the beginning was the Word, and the Word was with God, and the Word was God.",
+      "scope": "John 1:1"
+    },
+    "p_1": "Isword aims to make it easy and convenient for anyone to search for God's words. Words are our style and should be accessible anytime, anywhere. Just as numerous information in the world is quickly circulated and accessible comfortably, I hope that the word of God can be accessed by anyone and can be by our side.",
+    "contact": {
+      "title": "We're all ears!",
+      "sentence_1": "Help us to improve our service with your feedback",
+      "sentence_2": "Your small moves make big impact.",
+      "send_email": "Contact",
+      "donate": "Buy me a coffee"
+    }
   }
 }
