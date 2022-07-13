@@ -565,16 +565,25 @@ const parseText = (text, lang) => {
 
   book = getBookIndex(book.trim(), lang);
 
-  // If book is not found
+  // If book was not found
   if (book === -1) {
     return {
       text,
       version: lang,
     };
+    // If book was found
   } else {
     /* Parse Chapter */
     let parsedChapter = text.match(/[0-9]+(:|[가-힣])+[0-9-~0-9]+/g);
-    if (!parsedChapter || !parsedChapter.length) return {};
+
+    // TODO : CASE if book was found but not valid chpater and verse format
+    if (!parsedChapter || !parsedChapter.length) {
+      return {
+        text,
+        version: lang,
+      };
+    }
+
     let chapter = parsedChapter[0].split(":")[0];
     chapter = chapter.trim();
 
@@ -598,4 +607,4 @@ const parseText = (text, lang) => {
   }
 };
 
-module.exports = { parseText };
+module.exports = { parseText, getBookIndex };

@@ -4,3 +4,4 @@ config.json
 *.crx
 *.pem
 *.zip
+cert/

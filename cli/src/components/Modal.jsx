@@ -22,7 +22,7 @@ export const Modal = ({ isShowing, hide, msg }) =>
             tabIndex={-1}
             role="dialog"
           >
-            <div className="flex items-center text-white px-4 py-1 rounded-md bg-gradient-to-b from-royalf to-royalt relative mx-auto">
+            <div className="w-full flex justify-between space-x-4 p-4 items-center text-white rounded-md bg-gradient-to-b from-royalf to-royalt relative mx-auto">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -38,30 +38,29 @@ export const Modal = ({ isShowing, hide, msg }) =>
                 />
               </svg>
               <p className="text-white">{msg}</p>
-              <div className="modal-header">
-                <button
-                  type="button"
-                  className="modal-close-button"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                  onClick={hide}
+
+              <button
+                type="button"
+                className="modal-close-button"
+                data-dismiss="modal"
+                aria-label="Close"
+                onClick={hide}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </button>
-              </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>

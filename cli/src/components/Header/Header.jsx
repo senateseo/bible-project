@@ -4,26 +4,25 @@ import { Link, useLocation } from "react-router-dom";
 import ComboBox from "../Combobox";
 import i18n from "../../i18n";
 
-const languageOptions = [
-  {
-    label: "한국어(ko)",
-    value: "ko",
-  },
-  {
+const languageOptions = {
+  en: {
     label: "English(en)",
     value: "en",
   },
-  // {
-  //   label: "日本語(JP)",
-  //   value: "ja",
-  // },
-];
+  ko: {
+    label: "한국어(ko)",
+    value: "ko",
+  },
+};
 const Header = ({ navigation }) => {
-  const [language, setLanguage] = useState(languageOptions[0]);
+  const [language, setLanguage] = useState(languageOptions[i18n.language]);
 
   const onSelectOption = (option) => {
-    setLanguage(option);
+    setLanguage(languageOptions[option.value]);
     i18n.changeLanguage(option.value);
+
+    // Refresh the page
+    window.location.reload();
   };
 
   const location = useLocation();
@@ -86,7 +85,7 @@ const Header = ({ navigation }) => {
               <ComboBox
                 selectedOption={language}
                 setOption={onSelectOption}
-                options={languageOptions}
+                options={Object.values(languageOptions)}
               />
             </div>
           </div>

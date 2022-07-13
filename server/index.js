@@ -1,12 +1,19 @@
 const express = require("express");
 const cors = require("cors");
-
+const fs = require("fs");
 const dotenv = require("dotenv");
 const app = express();
+const http = require("http");
+const https = require("https");
 const sequelize = require("./models").sequelize;
 const PORT = process.env.PORT || 3000;
 
 const bibleRoutes = require("./routes/bible.js");
+
+const options = {
+  key: fs.readFileSync("./cert/private.key"),
+  cert: fs.readFileSync("./cert/certificate.crt"),
+};
 
 app.use(cors());
 dotenv.config();
@@ -19,6 +26,13 @@ app.get("/", (req, res) => {
 
 app.use("/bible", bibleRoutes);
 sequelize.sync();
-app.listen(PORT, () => {
-  console.log(`✅ Server is running on port ${PORT}`);
-});
+
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(options, app);
+
+// app.listen(PORT, () => {
+//   console.log(`✅ Server is running on port ${PORT}`);
+// });
+
+httpServer.listen(PORT);
+httpsServer.listen(8443);

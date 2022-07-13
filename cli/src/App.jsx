@@ -1,32 +1,33 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { objToQueryParams } from "./utils/util";
 import Card from "./components/Card/Card";
-import ComboBox from "./components/Combobox";
 import Searchbar from "./components/Searchbar";
 import { useModal } from "./hooks/useModal";
 import { Modal } from "./components/Modal";
 import { useTranslation } from "react-i18next";
 import { CardContainer } from "./components/Card/CardContainer";
+import { debounce } from "./utils/debounce";
 
-const API_URL = {
-  local: "http://localhost:3000",
-  prod: "https://hisword.site:8443",
-};
-
+const API_URL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_API_DEV
+    : process.env.REACT_APP_API_PROD;
 function App() {
   const { t, i18n } = useTranslation("translation", {
     keyPrefix: "search",
   });
+
   const { isShowing, hide, open, msg } = useModal();
   const inputRef = useRef(null);
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isEntering, setIsEntering] = useState(false);
   const [results, setResults] = useState(null);
-  const [version, setVersion] = [{ value: "ko" }];
+
   const [hasMore, setHasMore] = useState(false);
+  const [mode, setMode] = useState("range");
   const [total, setTotal] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [limit, _] = useState(10);
   const [pageNum, setPageNum] = useState(1);
 
   function InitArea() {
@@ -45,7 +46,9 @@ function App() {
   function EmptyResults({ keyword }) {
     return (
       <div className="flex justify-center items-center p-4">
-        <p className="text-lg font-light">No results for "{keyword}"</p>
+        <p className="text-lg font-light">
+          {t("no_result_msg")} <span className="font-bold">"{keyword}"</span>
+        </p>
       </div>
     );
   }
@@ -90,19 +93,20 @@ function App() {
 
   useEffect(() => {
     if (hasMore) {
-      loadMore(query, version.value, pageNum);
+      debounce(loadMore(query, i18n.language, pageNum), 500);
     }
   }, [pageNum]);
 
   const onSearch = async () => {
     const q = objToQueryParams({
       keyword: query,
-      lang: version.value,
+      lang: i18n.language,
     });
 
     try {
       setIsLoading(true);
-      let res = await fetch(`${API_URL.prod}/bible?${q}`, {
+
+      let res = await fetch(`${API_URL}/bible?${q}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json;charset=utf-8",
@@ -111,6 +115,7 @@ function App() {
 
       res = await res.json();
 
+      setMode(res.mode);
       if (res.mode === "include") {
         setResults(res.bible.rows);
         setTotal(res.bible.count);
@@ -139,7 +144,7 @@ function App() {
 
     try {
       setIsLoading(true);
-      let res = await fetch(`${API_URL.prod}/bible?${q}`, {
+      let res = await fetch(`${API_URL}/bible?${q}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json;charset=utf-8",
@@ -147,8 +152,6 @@ function App() {
       });
 
       res = await res.json();
-
-      console.log(res);
       setResults((prev) => [...prev, ...res.bible.rows]);
       setTotal(res.bible.count);
       setIsLoading(false);
@@ -188,8 +191,17 @@ function App() {
               <EmptyResults keyword={query} />
             ) : (
               <CardContainer>
+                {mode === "include" ? (
+                  <div className="font-light text-lg text-center">
+                    {i18n.language === "en" && "Total "}
+                    <span className="font-bold ">{total}</span>{" "}
+                    {t("result_msg")}
+                  </div>
+                ) : (
+                  <></>
+                )}
                 {results.map((elem, id) => {
-                  const isLastElement = results.length === id + 1;
+                  const isLastElement = results.length - 1 === id + 1;
                   return isLastElement ? (
                     <div key={id} ref={lastElementRef}>
                       <Card data={elem} onClick={open} />

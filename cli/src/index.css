@@ -1827,6 +1827,10 @@ select {
   font-weight: 800;
 }
 
+.font-bold {
+  font-weight: 700;
+}
+
 .leading-5 {
   line-height: 1.25rem;
 }

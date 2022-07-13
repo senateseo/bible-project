@@ -11,7 +11,9 @@
       "ex1": "john 3:16",
       "ex2": "john 3:16-17",
       "ex3": "daniel"
-    }
+    },
+    "result_msg": "results",
+    "no_result_msg": "No results for"
   },
   "modal": {
     "msg_copy": "Copied to Clipboard!"
