@@ -7,11 +7,14 @@ import { Modal } from "./components/Modal";
 import { useTranslation } from "react-i18next";
 import { CardContainer } from "./components/Card/CardContainer";
 import { debounce } from "./utils/debounce";
+import ComboBox from "./components/Combobox";
+import { bibleVersionOptions } from "./data/bible_version";
 
 const API_URL =
   process.env.NODE_ENV === "development"
     ? process.env.REACT_APP_API_DEV
     : process.env.REACT_APP_API_PROD;
+
 function App() {
   const { t, i18n } = useTranslation("translation", {
     keyPrefix: "search",
@@ -29,6 +32,10 @@ function App() {
   const [total, setTotal] = useState(0);
   const [limit, _] = useState(10);
   const [pageNum, setPageNum] = useState(1);
+
+  const [bibleVersion, setBibleVersion] = useState(
+    i18n ? bibleVersionOptions[i18n.language][0] : {}
+  );
 
   function InitArea() {
     return (
@@ -91,16 +98,20 @@ function App() {
     [isLoading, hasMore]
   );
 
-  useEffect(() => {
-    if (hasMore) {
-      debounce(loadMore(query, i18n.language, pageNum), 500);
-    }
-  }, [pageNum]);
+  // useEffect(() => {
+  //   if (hasMore) {
+  //     debounce(
+  //       loadMore(query, i18n.language, pageNum, bibleVersion.value),
+  //       500
+  //     );
+  //   }
+  // }, [pageNum]);
 
   const onSearch = async () => {
     const q = objToQueryParams({
       keyword: query,
       lang: i18n.language,
+      v: bibleVersion.value,
     });
 
     try {
@@ -128,6 +139,8 @@ function App() {
         setResults(res.bible);
       }
 
+      console.log(res);
+
       setIsLoading(false);
     } catch (e) {
       console.log(e);
@@ -135,11 +148,12 @@ function App() {
     }
   };
 
-  const loadMore = async (keyword, lang, page) => {
+  const loadMore = async (keyword, lang, page, version) => {
     const q = objToQueryParams({
       keyword,
       lang,
       page,
+      v: version,
     });
 
     try {
@@ -168,8 +182,13 @@ function App() {
 
   return (
     <>
-      <div className="mt-20 min-h-[784px] flex flex-col justify-center items-center max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 ">
+      <div className="mt-20 min-w-[400px] min-h-[600px] flex flex-col justify-center items-center max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 ">
         <div className="flex w-full justify-center space-x-6 max-w-3xl">
+          <ComboBox
+            selectedOption={bibleVersion}
+            setOption={setBibleVersion}
+            options={bibleVersionOptions[i18n.language]}
+          />
           <Searchbar
             ref={inputRef}
             placeholder={t("placeholder")}

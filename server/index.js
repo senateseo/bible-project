@@ -30,9 +30,5 @@ sequelize.sync();
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(options, app);
 
-// app.listen(PORT, () => {
-//   console.log(`✅ Server is running on port ${PORT}`);
-// });
-
 httpServer.listen(PORT);
 httpsServer.listen(8443);

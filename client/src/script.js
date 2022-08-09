@@ -32,7 +32,7 @@ const bibleOptions = {
 /* API URL */
 const API_URL = {
   local: "http://localhost:3000",
-  prod: "http://15.165.160.72:3000",
+  prod: "http://43.200.172.223:3000",
 };
 
 let SYSTEM_LANG = navigator.language;
@@ -218,7 +218,7 @@ const onChangeSearchInput = async (e) => {
       .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
       .join("&");
 
-    let res = await fetch(`${API_URL.prod}/bible?${query}`, {
+    let res = await fetch(`${API_URL.local}/bible?${query}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -548,7 +548,7 @@ const loadMore = (q, page, limit) => {
 
       if (hasMoreQuotes(page, limit, total)) {
         // call the API to get quotes
-        let res = await fetch(`${API_URL.prod}/bible?${query}`, {
+        let res = await fetch(`${API_URL.local}/bible?${query}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json;charset=utf-8",

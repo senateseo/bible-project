@@ -1,14 +1,19 @@
 const { Op } = require("sequelize");
-const { Bible } = require("../models");
-const { BibleKJV } = require("../models");
-const { Key } = require("../models");
+const { Bible, BibleEN, Key, KeyEN } = require("../models");
 const { parseText } = require("../utils/bible");
+
+const version = {
+  gaejung: "v_gaejung",
+  hangeul: "v_hangeul",
+  kjv: "v_KJV",
+  niv: "v_NIV",
+};
 
 const getphrase = async (req, res) => {
   let countsPerPage = 20;
 
   try {
-    const { keyword, lang, page } = req.query;
+    const { keyword, lang, page, v } = req.query;
 
     let offset;
 
@@ -18,17 +23,42 @@ const getphrase = async (req, res) => {
 
     const parsedResult = parseText(keyword, lang);
 
+    // config set by language
+    let db;
+    let modelForRefer;
+    let columnName;
+    let versionToQuery = version[v];
+
+    switch (lang) {
+      case "ko":
+        db = Bible;
+        modelForRefer = Key;
+        columnName = "key";
+        break;
+      case "en":
+        db = BibleEN;
+        modelForRefer = KeyEN;
+        columnName = "key_en";
+        break;
+      default:
+        break;
+    }
+
+    // CASE : No Result
     if (
       Object.keys(parsedResult).length === 0 &&
       parsedResult.constructor === Object
     ) {
       res.status(200).json({});
       return;
+
+      // CASE : Result => range.
     } else if (parsedResult.hasOwnProperty("text")) {
       const { text, version } = parsedResult;
 
       let result = await findVerseByKeyword(
-        version,
+        db,
+        versionToQuery,
         text,
         offset,
         countsPerPage
@@ -40,6 +70,7 @@ const getphrase = async (req, res) => {
       });
       return;
     } else {
+      // CASE : Result => including keyword.
       Object.keys(parsedResult).forEach((key) => {
         parsedResult[key] = parseInt(parsedResult[key]);
       });
@@ -55,109 +86,60 @@ const getphrase = async (req, res) => {
           [Op.eq]: from,
         };
 
-    switch (lang) {
-      case "ko":
-        Bible.findAll({
-          attributes: [
-            "book",
-            "chapter",
-            "verse",
-            "sentence",
-            "long_label",
-            "short_label",
-          ],
-          where: {
-            [Op.and]: [
-              { book: book + 1 },
-              { chapter },
-              {
-                verse: verseOption,
-              },
-            ],
+    db.findAll({
+      attributes: ["book", "chapter", "verse", [versionToQuery, "sentence"]],
+      where: {
+        [Op.and]: [
+          { book: book + 1 },
+          { chapter },
+          {
+            verse: verseOption,
           },
-        }).then((bible) => {
-          res.status(200).json({
-            bible,
-            mode: "range",
-          });
-        });
-        break;
-      case "en":
-        BibleKJV.findAll({
-          attributes: ["book", "chapter", "verse", "sentence"],
-          where: {
-            [Op.and]: [
-              { book: book + 1 },
-              { chapter },
-              {
-                verse: verseOption,
-              },
-            ],
-          },
-          include: [
-            {
-              model: Key, // Book
+        ],
+      },
+      include: [
+        {
+          model: modelForRefer, // Book
+          attributes: ["n"],
+        },
+      ],
+    }).then((bible) => {
+      // Add book name into the result object.
+      const data = bible.map((el) => {
+        const dataToUpdate = el.dataValues;
+        dataToUpdate["long_label"] = dataToUpdate[columnName].n;
+        delete dataToUpdate[columnName];
+        return dataToUpdate;
+      });
 
-              attributes: ["n"],
-            },
-          ],
-        }).then((bible) => {
-          const data = bible.map((el) => {
-            const dataToUpdate = el.dataValues;
-            dataToUpdate["long_label"] = dataToUpdate.key.n;
-            delete dataToUpdate["key"];
-            return dataToUpdate;
-          });
-
-          res.status(200).json({
-            bible: data,
-            mode: "range",
-          });
-        });
-        break;
-      default:
-        break;
-    }
+      res.status(200).json({
+        bible: data,
+        mode: "range",
+      });
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
 };
 
-const findVerseByKeyword = async (version, text, offset, countsPerPage) => {
+const findVerseByKeyword = async (
+  db,
+  versionToQuery,
+  text,
+  offset,
+  countsPerPage
+) => {
   let result;
 
-  switch (version) {
-    case "ko":
-      result = await Bible.findAndCountAll({
-        attributes: [
-          "book",
-          "chapter",
-          "verse",
-          "sentence",
-          "long_label",
-          "short_label",
-        ],
-        where: {
-          sentence: { [Op.like]: "%" + text + "%" },
-        },
-        offset,
-        limit: countsPerPage,
-      });
-      break;
-    case "en":
-      result = await BibleKJV.findAndCountAll({
-        attributes: ["book", "chapter", "verse", "sentence"],
-        where: {
-          sentence: { [Op.like]: "%" + text + "%" },
-        },
-        offset,
-        limit: countsPerPage,
-      });
-      break;
-    default:
-      break;
-  }
+  result = await db.findAndCountAll({
+    attributes: ["book", "chapter", "verse", [versionToQuery, "sentence"]],
+    where: {
+      [versionToQuery]: { [Op.like]: "%" + text + "%" },
+    },
+    offset,
+    limit: countsPerPage,
+  });
 
   return result;
 };

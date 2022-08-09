@@ -14,6 +14,7 @@ const languageOptions = {
     value: "ko",
   },
 };
+
 const Header = ({ navigation }) => {
   const [language, setLanguage] = useState(languageOptions[i18n.language]);
 

@@ -11,16 +11,16 @@ import "./i18n";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Suspense fallback="loading">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<App />} />
-            <Route path="about" element={<About />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </Suspense>
+    <App />
+
+    {/* <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<App />} />
+          <Route path="about" element={<About />} />
+        </Route>
+      </Routes>
+    </BrowserRouter> */}
   </React.StrictMode>
 );
 

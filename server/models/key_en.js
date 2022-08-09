@@ -1,31 +1,27 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "biblekjv",
+    "key_en",
     {
-      id: {
+      b: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
       },
-      book: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      chapter: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      verse: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      sentence: {
+      n: {
         type: DataTypes.TEXT("tiny"),
+        allowNull: false,
+      },
+      t: {
+        type: DataTypes.TEXT("tiny"),
+        allowNull: false,
+      },
+      g: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
     {
-      tableName: "t_kjv",
+      tableName: "k_en",
       timestamps: false,
     }
   );
