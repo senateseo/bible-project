@@ -13,7 +13,8 @@
       "ex3": "daniel"
     },
     "result_msg": "results",
-    "no_result_msg": "No results for"
+    "no_result_msg": "No results for",
+    "btn_copy_all": "Copy All"
   },
   "modal": {
     "msg_copy": "Copied to Clipboard!"

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { objToQueryParams } from "./utils/util";
+import { copyToClipboard, objToQueryParams } from "./utils/util";
 import Card from "./components/Card/Card";
 import Searchbar from "./components/Searchbar";
 import { useModal } from "./hooks/useModal";
@@ -9,6 +9,8 @@ import { CardContainer } from "./components/Card/CardContainer";
 import { debounce } from "./utils/debounce";
 import ComboBox from "./components/Combobox";
 import { bibleVersionOptions } from "./data/bible_version";
+import { ClipboardCopyIcon, ClipboardIcon } from "@heroicons/react/solid";
+import { Skeleton } from "./components/Skeleton";
 
 const API_URL =
   process.env.NODE_ENV === "development"
@@ -16,9 +18,7 @@ const API_URL =
     : process.env.REACT_APP_API_PROD;
 
 function App() {
-  const { t, i18n } = useTranslation("translation", {
-    keyPrefix: "search",
-  });
+  const { t, i18n } = useTranslation("translation");
 
   const { isShowing, hide, open, msg } = useModal();
   const inputRef = useRef(null);
@@ -39,12 +39,12 @@ function App() {
 
   function InitArea() {
     return (
-      <div className=" w-full pl-6 pr-3 py-4 sm:py-4 bg-gray-50 rounded-md leading-5 text-gray-300 placeholder-gray-400 sm:text-sm mt-6 text-gray-500 font-light prose prose-indigo prose-lg">
-        <p> {t("helper.text")}:</p>
+      <div className=" w-full pl-6 pr-3 py-4 sm:py-4 bg-gray-50 rounded-md leading-5 text-gray-300 placeholder-gray-400 text-sm mt-6 text-gray-500 font-light prose prose-indigo prose-lg">
+        <p> {t("search.helper.text")}:</p>
         <ul>
-          <li>{t("helper.ex1")}</li>
-          <li>{t("helper.ex2")}</li>
-          <li>{t("helper.ex3")}</li>
+          <li>{t("search.helper.ex1")}</li>
+          <li>{t("search.helper.ex2")}</li>
+          <li>{t("search.helper.ex3")}</li>
         </ul>
       </div>
     );
@@ -54,7 +54,8 @@ function App() {
     return (
       <div className="flex justify-center items-center p-4">
         <p className="text-lg font-light">
-          {t("no_result_msg")} <span className="font-bold">"{keyword}"</span>
+          {t("search.no_result_msg")}{" "}
+          <span className="font-bold">"{keyword}"</span>
         </p>
       </div>
     );
@@ -93,19 +94,21 @@ function App() {
           setPageNum((prev) => prev + 1);
         }
       });
-      if (node) observer.current.observe(node);
+      if (node) {
+        observer.current.observe(node);
+      }
     },
     [isLoading, hasMore]
   );
 
-  // useEffect(() => {
-  //   if (hasMore) {
-  //     debounce(
-  //       loadMore(query, i18n.language, pageNum, bibleVersion.value),
-  //       500
-  //     );
-  //   }
-  // }, [pageNum]);
+  useEffect(() => {
+    if (hasMore && mode === "include") {
+      debounce(
+        loadMore(query, i18n.language, pageNum, bibleVersion.value),
+        500
+      );
+    }
+  }, [pageNum]);
 
   const onSearch = async () => {
     const q = objToQueryParams({
@@ -128,9 +131,9 @@ function App() {
 
       setMode(res.mode);
       if (res.mode === "include") {
-        setResults(res.bible.rows);
-        setTotal(res.bible.count);
-        if (hasMoreQuotes(pageNum, limit, res.bible.count)) {
+        setResults(res.bible);
+        setTotal(res.count);
+        if (hasMoreQuotes(pageNum, limit, res.count)) {
           setHasMore(true);
         } else {
           setHasMore(false);
@@ -138,8 +141,6 @@ function App() {
       } else {
         setResults(res.bible);
       }
-
-      console.log(res);
 
       setIsLoading(false);
     } catch (e) {
@@ -166,8 +167,14 @@ function App() {
       });
 
       res = await res.json();
+
       setResults((prev) => [...prev, ...res.bible.rows]);
       setTotal(res.bible.count);
+      if (hasMoreQuotes(page, limit, res.bible.count)) {
+        setHasMore(true);
+      } else {
+        setHasMore(false);
+      }
       setIsLoading(false);
     } catch (e) {
       console.log(e);
@@ -180,18 +187,50 @@ function App() {
     return total === 0 || startIndex < total;
   };
 
+  // Function to copy whole results
+  const copyWholeResults = () => {
+    if (results.length <= 0) return;
+
+    const bookName = results[0].long_label;
+    const chapter = results[0].chapter;
+    const startVerse = results[0].verse;
+    const endVerse = results[results.length - 1].verse;
+
+    const content = results.map((row, i) => {
+      return row.verse + " " + row.sentence;
+    });
+
+    let title = `${bookName} ${chapter}:${startVerse}-${endVerse}`;
+    const msgToCopy = title + "\n\n" + content.join("\n");
+
+    copyToClipboard(msgToCopy);
+    open(t("modal.msg_copy"));
+  };
+
   return (
     <>
-      <div className="mt-20 min-w-[400px] min-h-[600px] flex flex-col justify-center items-center max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 ">
-        <div className="flex w-full justify-center space-x-6 max-w-3xl">
+      <div className="mt-8 min-w-[400px] min-h-[600px] flex flex-col justify-start items-center max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 ">
+        <div className="flex w-full justify-between mb-4">
           <ComboBox
             selectedOption={bibleVersion}
             setOption={setBibleVersion}
             options={bibleVersionOptions[i18n.language]}
           />
+
+          {mode === "range" && results && results.length > 0 && (
+            <button
+              className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm font-light leading-4 font-medium rounded-md text-white bg-gradient-to-b from-royalf to-royalt hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              onClick={() => copyWholeResults()}
+            >
+              <ClipboardIcon className="h-4 w-4 mr-2" />
+              {t("search.btn_copy_all")}{" "}
+            </button>
+          )}
+        </div>
+        <div className="flex w-full justify-center space-x-6 max-w-3xl">
           <Searchbar
             ref={inputRef}
-            placeholder={t("placeholder")}
+            placeholder={t("search.placeholder")}
             value={query}
             onChange={handleSearchInput}
             onClose={onClearInput}
@@ -203,9 +242,7 @@ function App() {
           className="flex w-full justify-center items-center space-x-6  mx-auto
       space-y-4 my-4"
         >
-          {isLoading ? (
-            <LoadingIndicator />
-          ) : results ? (
+          {results ? (
             !results.length && !isEntering ? (
               <EmptyResults keyword={query} />
             ) : (
@@ -214,23 +251,44 @@ function App() {
                   <div className="font-light text-lg text-center">
                     {i18n.language === "en" && "Total "}
                     <span className="font-bold ">{total}</span>{" "}
-                    {t("result_msg")}
+                    {t("search.result_msg")}
                   </div>
                 ) : (
                   <></>
                 )}
-                {results.map((elem, id) => {
-                  const isLastElement = results.length - 1 === id + 1;
-                  return isLastElement ? (
-                    <div key={id} ref={lastElementRef}>
-                      <Card data={elem} onClick={open} />
-                    </div>
-                  ) : (
-                    <div key={id}>
-                      <Card data={elem} onClick={open} />
-                    </div>
-                  );
-                })}
+                {isLoading ? (
+                  <>
+                    <Skeleton />
+                    <Skeleton />
+                    <Skeleton />
+                    <Skeleton />
+                    <Skeleton />
+                    <Skeleton />
+                  </>
+                ) : (
+                  results.map((elem, id) => {
+                    const isLastElement = results.length === id + 1;
+                    return isLastElement ? (
+                      <div key={id} ref={lastElementRef}>
+                        <Card
+                          data={elem}
+                          onClick={open}
+                          query={query}
+                          mode={mode}
+                        />
+                      </div>
+                    ) : (
+                      <div key={id}>
+                        <Card
+                          data={elem}
+                          onClick={open}
+                          query={query}
+                          mode={mode}
+                        />
+                      </div>
+                    );
+                  })
+                )}
               </CardContainer>
             )
           ) : (

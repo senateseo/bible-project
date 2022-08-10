@@ -13,7 +13,8 @@
       "ex3": "다니엘"
     },
     "result_msg": "개의 말씀이 검색되었습니다",
-    "no_result_msg": "검색결과가 없습니다."
+    "no_result_msg": "검색결과가 없습니다.",
+    "btn_copy_all": "전체복사"
   },
   "modal": {
     "msg_copy": "클립보드에 복사되었습니다!"

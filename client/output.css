@@ -537,10 +537,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   visibility: visible;
 }
 
-.\!visible {
-  visibility: visible !important;
-}
-
 .invisible {
   visibility: hidden;
 }
@@ -745,10 +741,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .contents {
   display: contents;
-}
-
-.\!contents {
-  display: contents !important;
 }
 
 .list-item {

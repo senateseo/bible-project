@@ -35,3 +35,14 @@ export const copyToClipboard = (text) => {
   document.execCommand("copy");
   document.body.removeChild(tempTextarea);
 };
+
+export const makeBold = (item, keyword) => {
+  const re = new RegExp(keyword, "g");
+
+  let result = item.replace(
+    re,
+    "<span class='font-bold'>" + keyword + "</span>"
+  );
+
+  return result;
+};

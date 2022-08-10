@@ -11,6 +11,16 @@ i18n
     // the translations
     // (tip move them in a JSON file and import them,
     // or even better, manage them via a UI
+    detection: {
+      order: [
+        "navigator",
+        "querystring",
+        "cookie",
+        "localStorage",
+        "sessionStorage",
+        "htmlTag",
+      ],
+    },
     fallbackLng: "en",
     debug: true,
     interpolation: {

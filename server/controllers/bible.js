@@ -52,25 +52,53 @@ const getphrase = async (req, res) => {
       res.status(200).json({});
       return;
 
-      // CASE : Result => range.
+      // CASE : Result => include.
     } else if (parsedResult.hasOwnProperty("text")) {
+      console.log("========== Include ==========");
       const { text, version } = parsedResult;
 
-      let result = await findVerseByKeyword(
-        db,
-        versionToQuery,
-        text,
-        offset,
-        countsPerPage
-      );
+      // let result = await findVerseByKeyword(
+      //   db,
+      //   versionToQuery,
+      //   text,
+      //   offset,
+      //   countsPerPage
+      // );
 
-      res.status(200).json({
-        bible: result,
-        mode: "include",
+      db.findAndCountAll({
+        attributes: ["book", "chapter", "verse", [versionToQuery, "sentence"]],
+        where: {
+          [versionToQuery]: { [Op.like]: "%" + text + "%" },
+        },
+        include: [
+          {
+            model: modelForRefer, // Book
+            attributes: ["n"],
+          },
+        ],
+        offset,
+        limit: countsPerPage,
+      }).then((bible) => {
+        // Add book name into the result object.
+
+        console.log(bible);
+        const data = bible.rows.map((el) => {
+          const dataToUpdate = el.dataValues;
+          dataToUpdate["long_label"] = dataToUpdate[columnName].n;
+          delete dataToUpdate[columnName];
+          return dataToUpdate;
+        });
+
+        res.status(200).json({
+          count: bible.count,
+          bible: data,
+          mode: "include",
+        });
       });
+
       return;
     } else {
-      // CASE : Result => including keyword.
+      // CASE : Result => Range
       Object.keys(parsedResult).forEach((key) => {
         parsedResult[key] = parseInt(parsedResult[key]);
       });
