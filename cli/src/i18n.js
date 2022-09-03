@@ -21,6 +21,8 @@ i18n
         "htmlTag",
       ],
     },
+    supportedLngs: ["en", "ko"],
+    nonExplicitSupportedLngs: true,
     fallbackLng: "en",
     debug: true,
     interpolation: {
