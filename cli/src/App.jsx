@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { copyToClipboard, objToQueryParams } from "./utils/util";
+import { copyToClipboard, getSystemLang, objToQueryParams } from "./utils/util";
 import Card from "./components/Card/Card";
 import Searchbar from "./components/Searchbar";
 import { useModal } from "./hooks/useModal";
@@ -9,7 +9,7 @@ import { CardContainer } from "./components/Card/CardContainer";
 import { debounce } from "./utils/debounce";
 import ComboBox from "./components/Combobox";
 import { bibleVersionOptions } from "./data/bible_version";
-import { ClipboardCopyIcon, ClipboardIcon } from "@heroicons/react/solid";
+import { ClipboardIcon } from "@heroicons/react/solid";
 import { Skeleton } from "./components/Skeleton";
 
 const API_URL =
@@ -34,7 +34,7 @@ function App() {
   const [pageNum, setPageNum] = useState(1);
 
   const [bibleVersion, setBibleVersion] = useState(
-    i18n ? bibleVersionOptions[i18n.language][0] : {}
+    i18n ? bibleVersionOptions[getSystemLang(i18n.language)][0] : {}
   );
 
   function InitArea() {
@@ -104,16 +104,23 @@ function App() {
   useEffect(() => {
     if (hasMore && mode === "include") {
       debounce(
-        loadMore(query, i18n.language, pageNum, bibleVersion.value),
+        loadMore(
+          query,
+          getSystemLang(i18n.language),
+          pageNum,
+          bibleVersion.value
+        ),
         500
       );
     }
+
+    console.log(getSystemLang(i18n.language));
   }, [pageNum]);
 
   const onSearch = async () => {
     const q = objToQueryParams({
       keyword: query,
-      lang: i18n.language,
+      lang: getSystemLang(i18n.language),
       v: bibleVersion.value,
     });
 
@@ -127,8 +134,9 @@ function App() {
         },
       });
 
+      console.log(res);
       res = await res.json();
-
+      console.log("But");
       setMode(res.mode);
       if (res.mode === "include") {
         setResults(res.bible);
@@ -168,9 +176,9 @@ function App() {
 
       res = await res.json();
 
-      setResults((prev) => [...prev, ...res.bible.rows]);
-      setTotal(res.bible.count);
-      if (hasMoreQuotes(page, limit, res.bible.count)) {
+      setResults((prev) => [...prev, ...res.bible]);
+      setTotal(res.count);
+      if (hasMoreQuotes(page, limit, res.count)) {
         setHasMore(true);
       } else {
         setHasMore(false);
@@ -209,12 +217,12 @@ function App() {
 
   return (
     <>
-      <div className="mt-8 min-w-[400px] min-h-[600px] flex flex-col justify-start items-center max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 ">
+      <div className="mt-8 min-w-[400px] min-h-[600px] flex flex-col justify-start items-center max-w-7xl mx-auto px-2 px-6 ">
         <div className="flex w-full justify-between mb-4">
           <ComboBox
             selectedOption={bibleVersion}
             setOption={setBibleVersion}
-            options={bibleVersionOptions[i18n.language]}
+            options={bibleVersionOptions[getSystemLang(i18n.language)]}
           />
 
           {mode === "range" && results && results.length > 0 && (
@@ -249,7 +257,7 @@ function App() {
               <CardContainer>
                 {mode === "include" ? (
                   <div className="font-light text-lg text-center">
-                    {i18n.language === "en" && "Total "}
+                    {getSystemLang(i18n.language) === "en" && "Total "}
                     <span className="font-bold ">{total}</span>{" "}
                     {t("search.result_msg")}
                   </div>

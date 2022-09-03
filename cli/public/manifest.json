@@ -1,15 +1,15 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "__MSG_appDesc__",
-  "default_locale": "ko",
+  "default_locale": "en",
   "manifest_version": 3,
   "author": "Sangwon Seo",
   "permissions": [],
   "action": {
     "default_popup": "index.html",
     "default_title": "Bible Search",
-    "default_locale": "ko"
+    "default_locale": "en"
   },
   "icons": {
     "16": "assets/icons/bible-16.png",

@@ -1,5 +1,10 @@
 import React from "react";
-import { copyToClipboard, findTextToBold, makeBold } from "../../utils/util";
+import {
+  copyToClipboard,
+  findTextToBold,
+  getSystemLang,
+  makeBold,
+} from "../../utils/util";
 import { books } from "../../data/books";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
@@ -21,8 +26,8 @@ const Card = ({ data, onClick, query, mode }) => {
       onClick={() => onHandleClick()}
     >
       <div className="mb-1">
-        {books[data.book - 1][i18n.language === "en" ? 1 : 0]} {data.chapter}:
-        {data.verse}{" "}
+        {books[data.book - 1][getSystemLang(i18n.language) === "en" ? 1 : 0]}{" "}
+        {data.chapter}:{data.verse}{" "}
       </div>
       {mode === "include" ? (
         <div

@@ -1876,6 +1876,11 @@ select {
   padding-right: 0.75rem;
 }
 
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .pl-6 {
   padding-left: 1.5rem;
 }
@@ -2218,6 +2223,11 @@ select {
   .sm\:py-2 {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+  }
+
+  .sm\:px-8 {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   .sm\:text-sm {
