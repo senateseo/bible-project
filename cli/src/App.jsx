@@ -50,6 +50,12 @@ function App() {
     );
   }
 
+  // function changeLang(lng) {
+  //   console.log(`lang has changed into ${lng}!!`);
+  //   i18n.changeLanguage(lng);
+  //   setBibleVersion(bibleVersionOptions[getSystemLang(i18n.language)][0]);
+  // }
+
   function EmptyResults({ keyword }) {
     return (
       <div className="flex justify-center items-center p-4">
@@ -59,10 +65,6 @@ function App() {
         </p>
       </div>
     );
-  }
-
-  function LoadingIndicator() {
-    return <div>Loading...</div>;
   }
 
   const handleSearchInput = (e) => {
@@ -113,7 +115,7 @@ function App() {
         500
       );
     }
-  }, [pageNum]);
+  }, [pageNum, i18n.language]);
 
   const onSearch = async () => {
     const q = objToQueryParams({
@@ -219,7 +221,7 @@ function App() {
             setOption={setBibleVersion}
             options={bibleVersionOptions[getSystemLang(i18n.language)]}
           />
-
+          {/* {<button onClick={() => changeLang("ko-KR")}>{"btn"}</button>} */}
           {mode === "range" && results && results.length > 0 && (
             <button
               className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm font-light leading-4 font-medium rounded-md text-white bg-gradient-to-b from-royalf to-royalt hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -230,6 +232,7 @@ function App() {
             </button>
           )}
         </div>
+
         <div className="flex w-full justify-center space-x-6 max-w-3xl">
           <Searchbar
             ref={inputRef}

@@ -3,8 +3,12 @@ import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { classNames } from "../utils/util";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const ComboBox = ({ selectedOption, setOption, options }) => {
+  const { i18n } = useTranslation("translation");
+
   return (
     <Menu as="div" className="relative inline-block">
       <div>
