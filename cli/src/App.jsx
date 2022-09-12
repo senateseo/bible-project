@@ -113,8 +113,6 @@ function App() {
         500
       );
     }
-
-    console.log(getSystemLang(i18n.language));
   }, [pageNum]);
 
   const onSearch = async () => {
@@ -133,10 +131,7 @@ function App() {
           "Content-Type": "application/json;charset=utf-8",
         },
       });
-
-      console.log(res);
       res = await res.json();
-      console.log("But");
       setMode(res.mode);
       if (res.mode === "include") {
         setResults(res.bible);
