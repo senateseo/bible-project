@@ -1,12 +1,25 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import Korean from "./lang/kr.json";
+import English from "./lang/en.json";
 
 import "./i18n";
 
+const locale = navigator.language;
+
+let lang;
+if (locale.toLowerCase().startsWith("ko")) {
+  lang = Korean;
+} else {
+  lang = English;
+}
+
+console.log(locale);
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <React.StrictMode>
     <App />

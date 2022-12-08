@@ -34,7 +34,7 @@ function App() {
   const [pageNum, setPageNum] = useState(1);
 
   const [bibleVersion, setBibleVersion] = useState(
-    i18n ? bibleVersionOptions[getSystemLang(i18n.language)][0] : {}
+    i18n.language ? bibleVersionOptions[getSystemLang(i18n.language)][0] : {}
   );
 
   function InitArea() {
@@ -262,7 +262,29 @@ function App() {
                 ) : (
                   <></>
                 )}
-                {isLoading ? (
+                {results.map((elem, id) => {
+                  const isLastElement = results.length === id + 1;
+                  return isLastElement ? (
+                    <div key={id} ref={lastElementRef}>
+                      <Card
+                        data={elem}
+                        onClick={open}
+                        query={query}
+                        mode={mode}
+                      />
+                    </div>
+                  ) : (
+                    <div key={id}>
+                      <Card
+                        data={elem}
+                        onClick={open}
+                        query={query}
+                        mode={mode}
+                      />
+                    </div>
+                  );
+                })}
+                {isLoading && (
                   <>
                     <Skeleton />
                     <Skeleton />
@@ -271,29 +293,6 @@ function App() {
                     <Skeleton />
                     <Skeleton />
                   </>
-                ) : (
-                  results.map((elem, id) => {
-                    const isLastElement = results.length === id + 1;
-                    return isLastElement ? (
-                      <div key={id} ref={lastElementRef}>
-                        <Card
-                          data={elem}
-                          onClick={open}
-                          query={query}
-                          mode={mode}
-                        />
-                      </div>
-                    ) : (
-                      <div key={id}>
-                        <Card
-                          data={elem}
-                          onClick={open}
-                          query={query}
-                          mode={mode}
-                        />
-                      </div>
-                    );
-                  })
                 )}
               </CardContainer>
             )

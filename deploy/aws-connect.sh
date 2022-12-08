@@ -1,1 +1,1 @@
-ssh -i ~/.ssh/aws-sangwon.pem ubuntu@15.165.160.72
+ssh -i ~/.ssh/aws-sangwon.pem ubuntu@43.200.172.223

@@ -8,6 +8,7 @@ import {
 import { books } from "../../data/books";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
+import { Transition } from "@headlessui/react";
 
 const Card = ({ data, onClick, query, mode }) => {
   const { t } = useTranslation("translation", { keyPrefix: "modal" });
@@ -21,23 +22,33 @@ const Card = ({ data, onClick, query, mode }) => {
     onClick(t("msg_copy"));
   };
   return (
-    <div
-      className="p-4 rounded-md border cursor-pointer hover:border-gray-500"
-      onClick={() => onHandleClick()}
+    <Transition
+      show={true}
+      enter="transition-opacity duration-75"
+      enterFrom="opacity-0"
+      enterTo="opacity-100"
+      leave="transition-opacity duration-150"
+      leaveFrom="opacity-100"
+      leaveTo="opacity-0"
     >
-      <div className="mb-1">
-        {books[data.book - 1][getSystemLang(i18n.language) === "en" ? 1 : 0]}{" "}
-        {data.chapter}:{data.verse}{" "}
+      <div
+        className="p-4 rounded-md border cursor-pointer hover:border-gray-500"
+        onClick={() => onHandleClick()}
+      >
+        <div className="mb-1">
+          {books[data.book - 1][getSystemLang(i18n.language) === "en" ? 1 : 0]}{" "}
+          {data.chapter}:{data.verse}{" "}
+        </div>
+        {mode === "include" ? (
+          <div
+            dangerouslySetInnerHTML={{ __html: makeBold(data.sentence, query) }}
+            className="font-light"
+          />
+        ) : (
+          <div className="font-light">{data.sentence}</div>
+        )}
       </div>
-      {mode === "include" ? (
-        <div
-          dangerouslySetInnerHTML={{ __html: makeBold(data.sentence, query) }}
-          className="font-light"
-        />
-      ) : (
-        <div className="font-light">{data.sentence}</div>
-      )}
-    </div>
+    </Transition>
   );
 };
 
