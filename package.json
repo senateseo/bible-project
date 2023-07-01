@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "archiver": "^5.3.1",
+    "autoprefixer": "^10.4.14",
+    "chokidar-cli": "^3.0.0",
+    "dotenv": "^16.0.3",
+    "esbuild": "^0.17.14",
+    "esbuild-style-plugin": "^1.6.1",
+    "fs-extra": "^11.1.1",
+    "tailwindcss": "^3.3.1"
+  }
+}

@@ -54,7 +54,6 @@ const getphrase = async (req, res) => {
 
       // CASE : Result => include.
     } else if (parsedResult.hasOwnProperty("text")) {
-      console.log("========== Include ==========");
       const { text, version } = parsedResult;
 
       // let result = await findVerseByKeyword(

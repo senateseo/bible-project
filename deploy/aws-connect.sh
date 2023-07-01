@@ -1,1 +1,1 @@
-ssh -i ~/.ssh/aws-sangwon.pem ubuntu@43.200.172.223
+ssh -i ~/.ssh/bible-ext.pem ec2-user@54.244.1.148
