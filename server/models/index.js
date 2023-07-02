@@ -18,19 +18,19 @@ db.Sequelize = Sequelize;
 
 const Bible = require("./bible")(sequelize, Sequelize);
 const BibleEN = require("./bible_en")(sequelize, Sequelize);
-const Key = require("./key")(sequelize, Sequelize);
-const KeyEN = require("./key_en")(sequelize, Sequelize);
+// const Key = require("./key")(sequelize, Sequelize);
+// const KeyEN = require("./key_en")(sequelize, Sequelize);
 db.Bible = Bible;
 db.BibleEN = BibleEN;
-db.Key = Key;
-db.KeyEN = KeyEN;
+// db.Key = Key;
+// db.KeyEN = KeyEN;
 
-Bible.belongsTo(Key, {
-  foreignKey: "book",
-});
+// Bible.belongsTo(Key, {
+//   foreignKey: "book",
+// });
 
-BibleEN.belongsTo(KeyEN, {
-  foreignKey: "book",
-});
+// BibleEN.belongsTo(KeyEN, {
+//   foreignKey: "book",
+// });
 
 module.exports = db;

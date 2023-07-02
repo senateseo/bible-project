@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       idx: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        primaryKey: true,
       },
       book: {
         type: DataTypes.INTEGER,
@@ -23,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       v_hangeul: {
-        type: DataTypes.TEXT("tiny"),
+        type: DataTypes.TEXT("long"),
         allowNull: false,
       },
     },

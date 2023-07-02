@@ -11,11 +11,9 @@ import ComboBox from "./components/Combobox";
 import { bibleVersionOptions } from "./data/bible_version";
 import { ClipboardIcon } from "@heroicons/react/solid";
 import { Skeleton } from "./components/Skeleton";
+import { books } from "./data/books";
 
-const API_URL =
-  process.env.NODE_ENV === "development"
-    ? process.env.REACT_APP_API_DEV
-    : process.env.REACT_APP_API_PROD;
+const API_URL = "http://localhost:3000";
 
 function App() {
   const { t, i18n } = useTranslation("translation");
@@ -49,13 +47,6 @@ function App() {
       </div>
     );
   }
-
-  // function changeLang(lng) {
-  //   console.log(`lang has changed into ${lng}!!`);
-  //   i18n.changeLanguage(lng);
-  //   setBibleVersion(bibleVersionOptions[getSystemLang(i18n.language)][0]);
-  // }
-
   function EmptyResults({ keyword }) {
     return (
       <div className="flex justify-center items-center p-4">
@@ -134,6 +125,7 @@ function App() {
         },
       });
       res = await res.json();
+      console.log(res);
       setMode(res.mode);
       if (res.mode === "include") {
         setResults(res.bible);
@@ -196,7 +188,8 @@ function App() {
   const copyWholeResults = () => {
     if (results.length <= 0) return;
 
-    const bookName = results[0].long_label;
+    const lang = getSystemLang(i18n.language) === "en" ? 1 : 0;
+    const bookName = books[results[0].book - 1][lang];
     const chapter = results[0].chapter;
     const startVerse = results[0].verse;
     const endVerse = results[results.length - 1].verse;

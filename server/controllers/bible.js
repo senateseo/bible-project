@@ -1,12 +1,12 @@
 const { Op } = require("sequelize");
-const { Bible, BibleEN, Key, KeyEN } = require("../models");
+const { Bible, BibleEN } = require("../models");
 const { parseText } = require("../utils/bible");
 
 const version = {
   gaejung: "v_gaejung",
   hangeul: "v_hangeul",
   kjv: "v_KJV",
-  niv: "v_NIV",
+  // niv: "v_NIV",
 };
 
 const getphrase = async (req, res) => {
@@ -32,13 +32,13 @@ const getphrase = async (req, res) => {
     switch (lang) {
       case "ko":
         db = Bible;
-        modelForRefer = Key;
-        columnName = "key";
+        // modelForRefer = Key;
+        // columnName = "key";
         break;
       case "en":
         db = BibleEN;
-        modelForRefer = KeyEN;
-        columnName = "key_en";
+        // modelForRefer = KeyEN;
+        // columnName = "key_en";
         break;
       default:
         break;
@@ -69,22 +69,21 @@ const getphrase = async (req, res) => {
         where: {
           [versionToQuery]: { [Op.like]: "%" + text + "%" },
         },
-        include: [
-          {
-            model: modelForRefer, // Book
-            attributes: ["n"],
-          },
-        ],
+        // include: [
+        //   {
+        //     model: modelForRefer, // Book
+        //     attributes: ["n"],
+        //   },
+        // ],
         offset,
         limit: countsPerPage,
       }).then((bible) => {
         // Add book name into the result object.
 
-        console.log(bible);
         const data = bible.rows.map((el) => {
           const dataToUpdate = el.dataValues;
-          dataToUpdate["long_label"] = dataToUpdate[columnName].n;
-          delete dataToUpdate[columnName];
+          // dataToUpdate["long_label"] = dataToUpdate[columnName].n;
+          // delete dataToUpdate[columnName];
           return dataToUpdate;
         });
 
@@ -124,18 +123,19 @@ const getphrase = async (req, res) => {
           },
         ],
       },
-      include: [
-        {
-          model: modelForRefer, // Book
-          attributes: ["n"],
-        },
-      ],
+      // include: [
+      //   {
+      //     model: modelForRefer, // Book
+      //     attributes: ["n"],
+      //   },
+      // ],
     }).then((bible) => {
       // Add book name into the result object.
+
       const data = bible.map((el) => {
         const dataToUpdate = el.dataValues;
-        dataToUpdate["long_label"] = dataToUpdate[columnName].n;
-        delete dataToUpdate[columnName];
+        // dataToUpdate["long_label"] = dataToUpdate[columnName].n;
+        // delete dataToUpdate[columnName];
         return dataToUpdate;
       });
 

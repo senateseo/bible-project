@@ -16,7 +16,7 @@ async function deleteOldDir() {
 
 async function runEsBuild() {
   await esbuild.build({
-    entryPoints: ["src/index.js"],
+    entryPoints: ["src/index.jsx"],
     bundle: true,
     outdir: outdir,
     treeShaking: true,
@@ -64,7 +64,14 @@ async function build() {
   await deleteOldDir();
   await runEsBuild();
 
-  const commonFiles = [];
+  const commonFiles = [
+    { src: "build/index.js", dst: "index.js" },
+    { src: "src/index.html", dst: "index.html" },
+    { src: "build/index.css", dst: "index.css" },
+    { src: "src/_locales", dst: "_locales" },
+    { src: "src/locales", dst: "locales" },
+    { src: "src/assets", dst: "assets" },
+  ];
 
   // chromium
   await copyFiles(
@@ -73,4 +80,8 @@ async function build() {
   );
 
   await zipFolder(`./${outdir}/chromium`);
+
+  console.log("Build success.");
 }
+
+build();

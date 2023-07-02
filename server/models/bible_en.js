@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
     "bible_en",
     {
-      id: {
+      idx: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
@@ -19,12 +19,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      t_KJV: {
-        type: DataTypes.TEXT("tiny"),
-        allowNull: false,
-      },
-      t_NIV: {
-        type: DataTypes.TEXT("tiny"),
+      v_KJV: {
+        type: DataTypes.TEXT,
         allowNull: false,
       },
     },
