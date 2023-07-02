@@ -13,7 +13,7 @@ import { ClipboardIcon } from "@heroicons/react/solid";
 import { Skeleton } from "./components/Skeleton";
 import { books } from "./data/books";
 
-const API_URL = "http://localhost:3000";
+const API_URL = "http://54.244.1.148:3000";
 
 function App() {
   const { t, i18n } = useTranslation("translation");
