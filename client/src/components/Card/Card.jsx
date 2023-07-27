@@ -12,10 +12,14 @@ import { Transition } from "@headlessui/react";
 
 const Card = ({ data, onClick, query, mode }) => {
   const { t } = useTranslation("translation", { keyPrefix: "modal" });
+
+  const lang = getSystemLang(i18n.language) === "en" ? 1 : 0;
+  const bookName = books[data.book - 1][lang];
+
   const onHandleClick = () => {
     // TODO : set msg to copy
     const msgToCopy = `
-     ${data.long_label} ${data.chapter}:${data.verse} \n
+     ${bookName} ${data.chapter}:${data.verse} \n
      ${data.sentence}
     `;
     copyToClipboard(msgToCopy);
